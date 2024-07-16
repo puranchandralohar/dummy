@@ -1,6 +1,6 @@
 // Home.js
 import React, { useState } from "react";
-import Audio from "../components/Audio";
+import AudioUpload from "../components/AudioUpload";
 import SignupPage from "./SignupPage";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -14,7 +14,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      {authenticate ? <Audio /> : <SignupPage />}
+      {authenticate ? <AudioUpload /> : <SignupPage />}
       <Footer />
     </div>
   );

@@ -20,11 +20,14 @@ import axios from "axios";
 const RecordingView = () => {
   const [isRecord, setIsRecord] = useState(false);
   const [transcript, setTranscript] = useState("");
+  const [correctedTranscript, setCorrectedTranscript] = useState("");
   const [notes, setNotes] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState(null);
   const [isRecordingDialogOpen, setIsRecordingDialogOpen] = useState(false);
   const recognitionRef = useRef(null);
+
+  const openaiApiKey = 'sk-proj-VlKQ0AwpTGkdJongriPYT3BlbkFJSsokNOp5XvazrQwSYR6h'; // Replace with your OpenAI API key
 
   // Function to start recording
   const startRecording = () => {
@@ -41,12 +44,17 @@ const RecordingView = () => {
       setTranscript(finalTranscript.trim());
     };
     recognitionRef.current.start();
+    console.log("Recording started");
   };
 
   // Function to stop recording
   const stopRecording = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
+      recognitionRef.current.onend = () => {
+        console.log("Recording stopped", transcript);
+        correctText(transcript); // Correct the transcript after stopping the recording
+      };
       setIsRecord(false);
     }
   };
@@ -60,36 +68,64 @@ const RecordingView = () => {
     }
   };
 
+  // Function to correct the text using OpenAI API
+  const correctText = async (text) => {
+    try {
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-3.5-turbo-0125',
+          messages: [
+            { role: 'system', content: 'You are a helpful assistant.' },
+            { role: 'user', content: `Correct the following text for grammar, spelling, and clarity:\n\n"${text}"\n\nCorrected Text:` },
+          ],
+          max_tokens: 100,
+          temperature: 0.5,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${openaiApiKey}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const correctedText = response.data.choices[0].message.content.trim();
+      setCorrectedTranscript(correctedText);
+    } catch (error) {
+      console.error("Error correcting text:", error);
+      setCorrectedTranscript(text); // Fallback to original text if correction fails
+    }
+  };
+  
+
   // Save note to backend
   const handleSaveNote = async () => {
-    if (transcript) {
-      try {
-        // Create a new Blob object with the transcript as audio data
-        const blob = new Blob([transcript], { type: 'audio/wav' });
-
-        // Create FormData object and append the blob
-        const formData = new FormData();
-        formData.append("file", blob);
-        // Send POST request to backend
-        const response = await axios.post("http://localhost:6001/api/upload", formData);
-        setNotes([...notes, response.data.note]); // Assuming backend returns a 'note' object
-        setTranscript(""); // Clear transcript after saving
-        setIsRecordingDialogOpen(false); // Close recording dialog after saving
-      } catch (error) {
-        console.error("Error saving note:", error);
-        // Handle error state or show user feedback
-      }
-    }
+    console.log("corrected",correctedTranscript )
+    // if (correctedTranscript) {
+    //   try {
+    //     const response = await axios.post("http://localhost:6001/api/notes", {
+    //       title: `Note ${notes.length + 1}`,
+    //       content: correctedTranscript,
+    //     });
+        setNotes([...notes, correctedTranscript]); // Assuming backend returns a 'note' object
+    //     setTranscript(""); // Clear transcript after saving
+    //     setCorrectedTranscript(""); // Clear corrected transcript after saving
+    //     setIsRecordingDialogOpen(false); // Close recording dialog after saving
+    //   } catch (error) {
+    //     console.error("Error saving note:", error);
+    //     // Handle error state or show user feedback
+    //   }
+    // }
   };
 
   // Fetch all notes from backend
   const fetchNotes = async () => {
-    try {
-      const response = await axios.get("http://localhost:6001/api/notes");
-      setNotes(response.data.notes);
-    } catch (error) {
-      console.error("Error fetching notes:", error);
-    }
+    // try {
+    //   const response = await axios.get("http://localhost:6001/api/notes");
+    //   setNotes(response.data.notes);
+    // } catch (error) {
+    //   console.error("Error fetching notes:", error);
+    // }
   };
 
   // Delete note from frontend and backend
@@ -187,7 +223,7 @@ const RecordingView = () => {
               {isRecord ? <MicOff fontSize="large" /> : <Mic fontSize="large" />}
             </IconButton>
             <Typography variant="body1" mt={2}>
-              {transcript}
+              {correctedTranscript || transcript}
             </Typography>
           </Box>
         </DialogContent>
@@ -195,7 +231,7 @@ const RecordingView = () => {
           <MuiButton onClick={() => setIsRecordingDialogOpen(false)} color="primary">
             Cancel
           </MuiButton>
-          <MuiButton onClick={handleSaveNote} color="primary" disabled={!transcript}>
+          <MuiButton onClick={handleSaveNote} color="primary">
             Save
           </MuiButton>
         </DialogActions>
@@ -222,5 +258,3 @@ const RecordingView = () => {
 };
 
 export default RecordingView;
-
-
