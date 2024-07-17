@@ -16,15 +16,20 @@ import {
 } from "@mui/material";
 import { Mic, MicOff, Delete, RadioButtonUnchecked } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleRecordingDialog } from "../redux/recordingSlice";
 
 const RecordingView = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const isRecordingDialogOpen = useSelector(
+    (state) => state.recording.isRecordingDialogOpen
+  );
   const [isRecord, setIsRecord] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [notes, setNotes] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState(null);
-  const [isRecordingDialogOpen, setIsRecordingDialogOpen] = useState(false);
   const recognitionRef = useRef(null);
 
   // Function to start recording
@@ -71,7 +76,7 @@ const RecordingView = () => {
       };
       setNotes([...notes, newNote]);
       setTranscript(""); // Clear transcript after saving
-      setIsRecordingDialogOpen(false); // Close recording dialog after saving
+      dispatch(toggleRecordingDialog()); // Close recording dialog after saving
     }
   };
 
@@ -115,19 +120,26 @@ const RecordingView = () => {
       display="flex"
       flexDirection="column"
       alignItems="center"
-      // justifyContent="center"
       height="100vh"
       mt={4}
       p={3}
     >
       <Box textAlign="center" mb={3}>
-        <Typography variant="h3" color={theme.palette.text.primary}>
+        <Typography variant="h1" color={theme.palette.text.primary}>
           AudioPen
         </Typography>
-        <Typography variant="h6" color={theme.palette.text.secondary}>
+        <Box
+          borderBottom={`10px solid ${"#FF5C0A"}`}
+          marginTop={2}
+          marginBottom={2}
+          marginInline={35}
+          borderRadius={2}
+        />
+        <Typography variant="h4" color={theme.palette.text.secondary} mb={10}>
           Go from fuzzy thought to clear text. Fast.
         </Typography>
       </Box>
+
       {notes.length > 0 && (
         <>
           <Box
@@ -186,19 +198,9 @@ const RecordingView = () => {
           </Box>
         </>
       )}
-
-      <Box mb={3}>
-        <IconButton
-          color="primary"
-          onClick={() => setIsRecordingDialogOpen(true)}
-        >
-          <Mic fontSize="large" />
-        </IconButton>
-      </Box>
-
       <Dialog
         open={isRecordingDialogOpen}
-        onClose={() => setIsRecordingDialogOpen(false)}
+        onClose={() => dispatch(toggleRecordingDialog())}
       >
         <DialogTitle>Record Note</DialogTitle>
         <DialogContent>
@@ -220,7 +222,7 @@ const RecordingView = () => {
         </DialogContent>
         <DialogActions>
           <MuiButton
-            onClick={() => setIsRecordingDialogOpen(false)}
+            onClick={() => dispatch(toggleRecordingDialog())}
             color="primary"
           >
             Cancel

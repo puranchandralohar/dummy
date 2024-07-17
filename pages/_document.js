@@ -4,12 +4,19 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+      <title>Oscar</title>
+        <meta name="description" content="Created by Navgurukul" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/Oscar.svg" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap"
+        />
         <link
           href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700&display=swap"
           rel="stylesheet"
         />
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
-         {/* <script src="https://apis.google.com/js/api.js" async defer></script> */}
+         <script src="https://apis.google.com/js/api.js" async defer></script>
       </Head>
       <body>
         <Main />

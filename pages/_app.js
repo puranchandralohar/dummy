@@ -3,31 +3,27 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../styles/theme";
 import "../styles/globals.css";
-import Home from "./index";
-import Head from "next/head";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { Provider } from "react-redux";
+import store from "../redux/store"; // Import the Redux store
+import { AppProps } from "next/app";
 
-function App() {
+
+function App({ Component, pageProps }) {
   return (
     <>
-      <Head>
-        <title>Oscar</title>
-        <meta name="description" content="Created by Navgurukul" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/Oscar.svg" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap"
-        />
-      </Head>
-      <GoogleOAuthProvider clientId="303405332985-lleqju488en3mjv74rhb49k10um5a5cp.apps.googleusercontent.com">
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Home />
-        </ThemeProvider>
+      <GoogleOAuthProvider clientId="use-google-client-id">
+        <Provider store={store}>
+          {" "}
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Component {...pageProps} />{" "}
+          </ThemeProvider>
+        </Provider>
       </GoogleOAuthProvider>
     </>
   );
 }
 
 export default App;
+
