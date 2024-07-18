@@ -5,14 +5,14 @@ import theme from "../styles/theme";
 import "../styles/globals.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from "react-redux";
-import store from "../redux/store"; // Import the Redux store
+import store from "../redux/store"; 
 import { AppProps } from "next/app";
 
 
 function App({ Component, pageProps }) {
   return (
     <>
-      <GoogleOAuthProvider clientId="use-google-client-id">
+      <GoogleOAuthProvider clientId="34917283366-b806koktimo2pod1cjas8kn2lcpn7bse.apps.googleusercontent.com">
         <Provider store={store}>
           {" "}
           <ThemeProvider theme={theme}>

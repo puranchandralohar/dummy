@@ -5,30 +5,8 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditIcon from "@mui/icons-material/Edit";
-import { Box, Typography } from "@mui/material";
-import { styled } from "@mui/system";
+import { Box } from "@mui/material";
 import { toggleRecordingDialog } from "../redux/recordingSlice";
-
-const FooterContainer = styled("footer")({
-  width: "100%",
-  backgroundColor: "#f8f8f8",
-  textAlign: "center",
-  padding: "1rem",
-  position: "sticky",
-  bottom: 0,
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  zIndex: 1000,
-});
-
-const HoverContainer = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  "&:hover .hover-text": {
-    display: "block",
-  },
-});
 
 const Footer = () => {
   const dispatch = useDispatch();
@@ -42,15 +20,33 @@ const Footer = () => {
   };
 
   return (
-    <FooterContainer sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
+    <footer
+      style={{
+        width: "100%",
+        textAlign: "center",
+        padding: "1rem",
+        position: "sticky",
+        bottom: 0,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        zIndex: 1000,
+      }}
+    >
       <Tooltip title="Upload Audio">
-        <HoverContainer>
+        <Box
+          style={{
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+        >
           <IconButton
             aria-label="upload audio"
             onMouseEnter={() => console.log("Hover Upload Audio")}
           >
             <ArrowUpwardIcon
-              sx={{
+              style={{
                 fontSize: 50,
                 padding: "10px",
                 backgroundColor: "gray",
@@ -59,26 +55,33 @@ const Footer = () => {
               }}
             />
           </IconButton>
-        </HoverContainer>
+        </Box>
       </Tooltip>
       <MicIcon
         onClick={handleUploadAudio}
-        sx={{
+        style={{
           backgroundColor: "#ff5c0a",
           color: "#fff",
           fontSize: 100,
           borderRadius: "50%",
           padding: "20px",
+          cursor: "pointer",
         }}
       />
       <Tooltip title="Rewrite the Text Note">
-        <HoverContainer>
+        <Box
+          style={{
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+        >
           <IconButton
             aria-label="edit note"
             onMouseEnter={() => console.log("Hover Rewrite the Text Note")}
           >
             <EditIcon
-              sx={{
+              style={{
                 fontSize: 50,
                 padding: "10px",
                 backgroundColor: "gray",
@@ -87,9 +90,9 @@ const Footer = () => {
               }}
             />
           </IconButton>
-        </HoverContainer>
+        </Box>
       </Tooltip>
-    </FooterContainer>
+    </footer>
   );
 };
 

@@ -4,32 +4,9 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import {
-  Box,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Button,
-} from "@mui/material";
-import { styled } from "@mui/system";
+import { Box, Typography, Dialog, DialogTitle, Button } from "@mui/material";
 import GoogleLoginComponent from "./GoogleLogin";
 import theme from "@/styles/theme";
-
-const HoverText = styled(Typography)({
-  display: "none",
-  color: "gray",
-  marginLeft: "8px",
-  marginRight: "8px",
-});
-
-const HoverContainer = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  "&:hover .hover-text": {
-    display: "block",
-  },
-});
 
 const Header = () => {
   const [openAccountDialog, setOpenAccountDialog] = useState(false);
@@ -59,19 +36,58 @@ const Header = () => {
         sx={{ backgroundColor: "transparent", boxShadow: "none" }}
       >
         <Toolbar>
-          <HoverContainer onClick={handleAccountClick}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              "&:hover .hover-text": {
+                display: "block",
+              },
+            }}
+            onClick={handleAccountClick}
+          >
             <IconButton edge="start" color="inherit" aria-label="profile">
               <AccountCircleIcon sx={{ fontSize: 50 }} />
             </IconButton>
-            <HoverText className="hover-text">Account</HoverText>
-          </HoverContainer>
+            <Typography
+              className="hover-text"
+              sx={{
+                display: "none",
+                color: "gray",
+                marginLeft: "8px",
+                marginRight: "8px",
+              }}
+            >
+              Account
+            </Typography>
+          </Box>
           <Box sx={{ flexGrow: 1 }} />
-          <HoverContainer>
-            <HoverText className="hover-text">Settings</HoverText>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "pointer",
+              "&:hover .hover-text": {
+                display: "block",
+              },
+            }}
+          >
+            <Typography
+              className="hover-text"
+              sx={{
+                display: "none",
+                color: "gray",
+                marginLeft: "8px",
+                marginRight: "8px",
+              }}
+            >
+              Settings
+            </Typography>
             <IconButton edge="end" color="inherit" aria-label="settings">
               <SettingsIcon sx={{ fontSize: 50 }} />
             </IconButton>
-          </HoverContainer>
+          </Box>
         </Toolbar>
       </AppBar>
 

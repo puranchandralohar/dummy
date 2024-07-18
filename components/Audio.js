@@ -126,7 +126,7 @@ const RecordingView = () => {
     >
       <Box textAlign="center" mb={3}>
         <Typography variant="h1" color={theme.palette.text.primary}>
-          AudioPen
+          oscar
         </Typography>
         <Box
           borderBottom={`10px solid ${"#FF5C0A"}`}

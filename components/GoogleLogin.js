@@ -7,29 +7,32 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
+  CircularProgress, 
 } from "@mui/material";
 import { useRouter } from "next/router";
-import styles from "../styles/SignupPage.module.css"; // Assuming you have a separate CSS file for styling
+import styles from "../styles/SignupPage.module.css";
 import { jwtDecode } from "jwt-decode";
 
 const GoogleLoginComponent = ({ open, onClose }) => {
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const onSignIn = async (credentialResponse) => {
+    setLoading(true); 
     const token = credentialResponse.credential;
     const decoded = jwtDecode(token);
     console.log(decoded);
-    // Store necessary details in local storage
-    localStorage.setItem("googleToken", token);
-    localStorage.setItem("googleUser", JSON.stringify(decoded));
-    router.push("/dashboard");
-
+    setTimeout(() => {
+      localStorage.setItem("googleToken", token);
+      localStorage.setItem("googleUser", JSON.stringify(decoded));
+      router.push("/Audio");
+      setLoading(false);
+    }, 2000);
   };
 
   const onGoogleLoginFail = (errorResponse) => {
     console.error("Google login failed:", errorResponse);
-    setLoading(false);
+    setLoading(false); // Set loading state to false on failure
   };
 
   const handleEmailLogin = () => {
@@ -47,6 +50,11 @@ const GoogleLoginComponent = ({ open, onClose }) => {
         <Typography variant="h4">Sign Up / Log In</Typography>
       </DialogTitle>
       <DialogContent>
+        {loading && (
+          <Box className={styles.loaderContainer}>
+            <CircularProgress style={{ color: "#ff5c0a" }} />
+          </Box>
+        )}
         <Box mt={4}>
           <GoogleLogin
             onSuccess={onSignIn}
@@ -75,7 +83,10 @@ const GoogleLoginComponent = ({ open, onClose }) => {
           />
         </Box>
         <Box mt={2}>
-          <button className={styles.secondaryButton} onClick={handleEmailLogin}>
+          <button
+            className={styles.secondaryButton}
+            onClick={handleEmailLogin}
+          >
             Or sign up / log in with email
           </button>
         </Box>

@@ -1,16 +1,17 @@
 import React from "react";
 import Audio from "../components/Audio";
 import Footer from "../components/Footer";
-import HeadeerforDashboard from "../components/DashboardHeader"
+import DashboardHeader from "../components/AudioHeader"
+import withAuth from '../components/WithAuth';
 
 const dashboard = () => {
   return (
     <div>
-      <HeadeerforDashboard/>
+      <DashboardHeader/>
       <Audio />
       <Footer />
     </div>
   );
 };
 
-export default dashboard;
+export default withAuth(dashboard);

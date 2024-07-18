@@ -50,7 +50,7 @@ const SignupPage = () => {
             fontFamily="DM Sans"
             fontWeight="bold"
           >
-            AudioPen converts voice notes into text that's easy to read and
+            Oscar converts voice notes into text that's easy to read and
             ready to share.
           </Typography>
           <Typography
