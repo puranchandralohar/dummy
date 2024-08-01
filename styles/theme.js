@@ -1,71 +1,48 @@
-// theme.js
+
 import { createTheme } from '@mui/material/styles';
 import { breakpoints } from './constant';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#ff5c0a',
+      main: '#005555', 
     },
     secondary: {
-      main: '#f8f8f8',
-    },
-    text: {
-      primary: '#000',
-      secondary: 'gray',
+      main: '#f50057', 
     },
     background: {
-      default: '#E6E6FA', // Set your desired background color here
+      default: '#f0f4f8', 
     },
   },
   typography: {
-    fontFamily: 'Fraunces, Arial, sans-serif',
+    fontFamily: 'Roboto, sans-serif',
     h1: {
-      fontFamily: 'inherit',
-      fontSize: '3rem',
-      '@media (max-width:600px)': {
-        fontSize: '2rem',
-      },
-      '@media (max-width:900px)': {
-        fontSize: '2.5rem',
-      },
+      fontSize: '2.5rem',
+      fontWeight: 600,
+      margin: '20px 0',
     },
-    h4: {
-      fontFamily: 'inherit',
-      fontSize: '2rem',
-    },
-    h5: {
-      fontFamily: 'DM Sans',
-      fontWeight: 'bold',
+    h6: {
+      fontSize: '1.25rem',
+      fontWeight: 500,
+      margin: '10px 0',
     },
     body1: {
-      fontFamily: 'inherit',
+      fontSize: '1rem',
+      margin: '10px 0',
     },
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: '50px',
-        },
-      },
-    },
-    MuiIconButton: {
-      styleOverrides: {
-        root: {
-          color: '#000',
-        },
-      },
-    },
-    MuiTooltip: {
-      styleOverrides: {
-        tooltip: {
-          backgroundColor: 'gray',
+          borderRadius: '20px',
+          textTransform: 'none',
         },
       },
     },
   },
-  breakpoints: breakpoints,
+    breakpoints: breakpoints,
 });
 
 export default theme;
+

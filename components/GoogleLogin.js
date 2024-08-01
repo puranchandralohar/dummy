@@ -22,12 +22,12 @@ const GoogleLoginComponent = ({ open, onClose }) => {
     const token = credentialResponse.credential;
     const decoded = jwtDecode(token);
     console.log(decoded);
-    setTimeout(() => {
+    // setTimeout(() => {
       localStorage.setItem("googleToken", token);
       localStorage.setItem("googleUser", JSON.stringify(decoded));
       router.push("/Audio");
       setLoading(false);
-    }, 2000);
+    // }, 2000);
   };
 
   const onGoogleLoginFail = (errorResponse) => {
@@ -47,7 +47,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
       PaperProps={{ className: styles.dialogPaper }}
     >
       <DialogTitle className={styles.dialogTitle}>
-        <Typography variant="h4">Sign Up / Log In</Typography>
+        <Typography variant="h6">To start recording Login first to continue</Typography>
       </DialogTitle>
       <DialogContent>
         {loading && (
@@ -64,32 +64,33 @@ const GoogleLoginComponent = ({ open, onClose }) => {
               <Button
                 variant="contained"
                 onClick={renderProps.onClick}
-                style={{
-                  backgroundColor: "#ff5c0a",
-                  color: "#fff",
-                  fontFamily: "cursive",
-                  border: "none",
-                  fontSize: "18px",
-                  padding: "15px",
-                  borderRadius: "50px",
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                  margin: "10px 0",
-                  transition: "box-shadow 0.3s ease",
-                }}
+                className={styles.secondaryButton}
+                // style={{
+                //   backgroundColor: "#ff5c0a",
+                //   color: "#fff",
+                //   fontFamily: "cursive",
+                //   border: "none",
+                //   fontSize: "18px",
+                //   padding: "15px",
+                //   borderRadius: "50px",
+                //   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                //   margin: "10px 0",
+                //   transition: "box-shadow 0.3s ease",
+                // }}
               >
                 Log In with Google
               </Button>
             )}
           />
         </Box>
-        <Box mt={2}>
+        {/* <Box mt={2}>
           <button
             className={styles.secondaryButton}
             onClick={handleEmailLogin}
           >
             Or sign up / log in with email
           </button>
-        </Box>
+        </Box> */}
       </DialogContent>
     </Dialog>
   );

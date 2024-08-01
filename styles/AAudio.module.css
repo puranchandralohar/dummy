@@ -1,0 +1,71 @@
+
+
+.container {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px; /* Equivalent to py: 4 */
+    padding-bottom: 16px; /* Equivalent to py: 4 */
+  }
+  
+  .box {
+    width: 100%;
+    text-align: left;
+    flex: 1;
+  }
+  
+  .transcriptBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .notesBox {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px; /* Equivalent to gap: 2 */
+    justify-content: center;
+  }
+  
+  .noteBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Equivalent to boxShadow: 1 */
+    background-color: #51A09B;
+    border: 1px solid #ddd;
+  }
+  
+  .micContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px; /* Equivalent to mt: 2 */
+    color: white;
+  }
+  
+  .outerCircle {
+    background-color: #cae9eb;
+    border-radius: 50%;
+    opacity: 0.5;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .innerCircle {
+    background-color: #51a09b;
+    border-radius: 50%;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

@@ -1,15 +1,19 @@
 import React from "react";
 import Audio from "../components/Audio";
 import Footer from "../components/Footer";
-import DashboardHeader from "../components/AudioHeader"
+import AudioHeader from "../components/AudioHeader"
 import withAuth from '../components/WithAuth';
+import ReactAudio from '../components/ReactAudio';
+import AAudio from '../components/AAudio'
 
 const dashboard = () => {
   return (
     <div>
-      <DashboardHeader/>
-      <Audio />
-      <Footer />
+      <AudioHeader/>
+      {/* <Audio /> */}
+      <AAudio/>
+      {/* <ReactAudio/> */}
+      {/* <Footer /> */}
     </div>
   );
 };

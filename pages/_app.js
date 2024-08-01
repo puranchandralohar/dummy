@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from "react-redux";
 import store from "../redux/store"; 
 import { AppProps } from "next/app";
+import 'regenerator-runtime/runtime';
 
 
 function App({ Component, pageProps }) {

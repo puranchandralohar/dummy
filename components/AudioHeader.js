@@ -9,6 +9,7 @@ import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import styles from "../styles/Navbar.module.css";
 import ProfileDialog from "./ProfileDialog";
+import { Box } from "@mui/system";
 
 const Navbar = () => {
   const router = useRouter();
@@ -30,14 +31,18 @@ const Navbar = () => {
     setDialogOpen(false);
   };
 
-  const handleLogout = () => {
-    localStorage.clear();
-    router.push("/");
-  };
+  // const handleLogout = () => {
+  //   localStorage.clear();
+  //   router.push("/");
+  // };
 
   return (
-    <AppBar position="static" className={styles.navbar}>
+    <Box position="static" className={styles.navbar}>
       <Toolbar className={styles.toolbar}>
+        <Typography> </Typography>
+        <Typography variant="h4" color="#51A09B">
+          oscar
+        </Typography>
         <Typography variant="h6" component="div">
           <IconButton onClick={handleOpenDialog}>
             {userDetails ? (
@@ -47,28 +52,9 @@ const Navbar = () => {
             )}
           </IconButton>
         </Typography>
-
-        <div className={styles.navbarNav}>
-          <Typography variant="h6" component="div">
-            <Link href="/app" passHref>
-              <Button className={styles.navButton}>App</Button>
-            </Link>
-          </Typography>
-          <Typography variant="h6" component="div">
-            <Link href="/link" passHref>
-              <Button className={styles.navButton}>Link</Button>
-            </Link>
-          </Typography>
-          <Typography variant="h6" component="div">
-            <Button className={styles.navButton} onClick={handleLogout}>
-              Logout
-            </Button>
-          </Typography>
-        </div>
       </Toolbar>
       <ProfileDialog open={dialogOpen} onClose={handleCloseDialog} />
-    </AppBar>
+    </Box>
   );
 };
-
 export default Navbar;
