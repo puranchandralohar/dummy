@@ -41,7 +41,7 @@ const Navbar = () => {
       <Toolbar className={styles.toolbar}>
         <Typography> </Typography>
         <Typography variant="h4" color="#51A09B">
-          oscar
+          Oscar
         </Typography>
         <Typography variant="h6" component="div">
           <IconButton onClick={handleOpenDialog}>
