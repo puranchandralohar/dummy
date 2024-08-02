@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Container, Typography, Box, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Container, Typography, Box, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, Button } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import SaveIcon from "@mui/icons-material/Save";
 import styles from "../styles/AAudio.module.css";
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
@@ -35,6 +36,7 @@ const AAudio = () => {
     setIsDialogOpen(false);
     setIsRecord(false);
     setTranscript("");
+    setCorrectedTranscript("");
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
@@ -43,7 +45,6 @@ const AAudio = () => {
   };
 
   const handleStartRecording = () => {
-    // setTranscript("");
     setIsRecord(true);
     recognitionRef.current = new window.webkitSpeechRecognition();
     recognitionRef.current.continuous = true;
@@ -86,7 +87,7 @@ const AAudio = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       setIsRecord(false);
-      console.log("Recorded text:-", transcript);
+      console.log("Recorded text:", transcript);
       setIsLoading(true);
       run(transcript);
     }
@@ -95,19 +96,33 @@ const AAudio = () => {
   };
 
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
-  // console.log(genAI, "genAI");
 
   async function run(transcript) {
-    // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const prompt = `Correct the following text for grammar, spelling, and clarity:\n\n"${transcript}"\n\n and return only the corrected text:`;
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    setCorrectedTranscript(text);
-    console.log("AI Corrected Text :-", text);
-    setIsLoading(false);
+
+    try {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = await response.text();
+      
+      // Simulate a 5-second delay before setting the corrected text
+      setTimeout(() => {
+        setCorrectedTranscript(text);
+        console.log("AI Corrected Text:", text);
+        setIsLoading(false);
+      }, 5000);
+    } catch (error) {
+      console.error("Error:", error);
+      setIsLoading(false);
+    }
   }
+
+  const handleSaveNote = () => {
+    setNotes([...notes, correctedTranscript]);
+    setCorrectedTranscript("");
+    setIsDialogOpen(false);
+  };
 
   const handleDeleteNote = (index) => {
     const updatedNotes = notes.filter((_, i) => i !== index);
@@ -167,18 +182,38 @@ const AAudio = () => {
       >
         <DialogTitle sx={{ color: '#fff' }}>Recording</DialogTitle>
         <DialogContent>
-          <Typography variant="h6" sx={{ color: '#fff' }}>
-            {Math.floor(timer / 60)}:{('0' + (timer % 60)).slice(-2)}
-          </Typography>
-          <Typography variant="body1" sx={{ color: '#fff' }}>Your recording is in progress...</Typography>
+          {!correctedTranscript && (
+            <>
+              <Typography variant="h6" sx={{ color: '#fff' }}>
+                {Math.floor(timer / 60)}:{('0' + (timer % 60)).slice(-2)}
+              </Typography>
+              <Typography variant="body1" sx={{ color: '#fff' }}>Your recording is in progress...</Typography>
+            </>
+          )}
+          {isLoading && (
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
+              <CircularProgress sx={{ color: "#fff" }} />
+            </Box>
+          )}
+          {correctedTranscript && (
+            <Typography variant="body1" sx={{ color: '#fff', mt: 2 }}>
+              Corrected Text: {correctedTranscript}
+            </Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <IconButton onClick={handleCloseDialog} color="secondary">
             <RestartAltIcon sx={{ color: "#fff" }} />
           </IconButton>
-          <IconButton onClick={handleStopRecording} color="primary">
-            <StopIcon sx={{ color: "#fff" }} />
-          </IconButton>
+          {correctedTranscript ? (
+            <Button onClick={handleSaveNote} color="primary" variant="contained" startIcon={<SaveIcon />}>
+              Save
+            </Button>
+          ) : (
+            <IconButton onClick={handleStopRecording} color="primary">
+              <StopIcon sx={{ color: "#fff" }} />
+            </IconButton>
+          )}
         </DialogActions>
       </Dialog>
     </Container>
