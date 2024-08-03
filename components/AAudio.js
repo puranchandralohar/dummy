@@ -1,5 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { Container, Typography, Box, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, Button } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Box,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  CircularProgress,
+  Button,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MicIcon from "@mui/icons-material/Mic";
 import StopIcon from "@mui/icons-material/Stop";
@@ -178,25 +189,25 @@ const AAudio = () => {
       <Dialog
         open={isDialogOpen}
         onClose={handleCloseDialog}
-        sx={{ '& .MuiPaper-root': { backgroundColor: 'green' } }}
+        sx={{ "& .MuiPaper-root": { backgroundColor: "#99cac0" } }}
       >
-        <DialogTitle sx={{ color: '#fff' }}>Recording</DialogTitle>
+        <DialogTitle sx={{ color: "#fff" }}>Recording</DialogTitle>
         <DialogContent>
           {!correctedTranscript && (
             <>
-              <Typography variant="h6" sx={{ color: '#fff' }}>
-                {Math.floor(timer / 60)}:{('0' + (timer % 60)).slice(-2)}
+              <Typography variant="h6" sx={{ color: "#fff" }}>
+                {Math.floor(timer / 60)}:{("0" + (timer % 60)).slice(-2)}
               </Typography>
-              <Typography variant="body1" sx={{ color: '#fff' }}>Your recording is in progress...</Typography>
+              <Typography variant="body1" sx={{ color: "#fff" }}>Your recording is in progress...</Typography>
             </>
           )}
           {isLoading && (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mt: 2 }}>
               <CircularProgress sx={{ color: "#fff" }} />
             </Box>
           )}
           {correctedTranscript && (
-            <Typography variant="body1" sx={{ color: '#fff', mt: 2 }}>
+            <Typography variant="body1" sx={{ color: "#fff", mt: 2 }}>
               Corrected Text: {correctedTranscript}
             </Typography>
           )}
