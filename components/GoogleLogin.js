@@ -7,37 +7,42 @@ import {
   DialogContent,
   DialogTitle,
   Typography,
-  CircularProgress, 
 } from "@mui/material";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import styles from "../styles/SignupPage.module.css";
-import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+import Loader from "./Loader"; 
 
 const GoogleLoginComponent = ({ open, onClose }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const onSignIn = async (credentialResponse) => {
-    setLoading(true); 
-    const token = credentialResponse.credential;
-    const decoded = jwtDecode(token);
-    console.log(decoded);
-    // setTimeout(() => {
-      localStorage.setItem("googleToken", token);
-      localStorage.setItem("googleUser", JSON.stringify(decoded));
+    setLoading(true);
+    const idToken = credentialResponse.credential;
+    try {
+      // Send the idToken to your backend API
+      const response = await axios.post(
+        "https://dev-oscar.merakilearn.org/api/v1/auth/login/google",
+        {
+          idToken: idToken,
+        }
+      );
+      // Handle the response from your backend API
+      localStorage.setItem("googleToken", response.data.token);
+      localStorage.setItem("googleUser", JSON.stringify(response.data));
       router.push("/Audio");
+    } catch (error) {
+      console.error("Error during API call:", error);
+    } finally {
       setLoading(false);
-    // }, 2000);
+    }
   };
 
   const onGoogleLoginFail = (errorResponse) => {
     console.error("Google login failed:", errorResponse);
     setLoading(false); // Set loading state to false on failure
-  };
-
-  const handleEmailLogin = () => {
-    console.log("Email login clicked");
-    // Implement your email login functionality here
   };
 
   return (
@@ -47,12 +52,14 @@ const GoogleLoginComponent = ({ open, onClose }) => {
       PaperProps={{ className: styles.dialogPaper }}
     >
       <DialogTitle className={styles.dialogTitle}>
-        <Typography variant="h6">To start recording Login first to continue</Typography>
+        <Typography variant="h6">
+          To start recording Login first to continue
+        </Typography>
       </DialogTitle>
       <DialogContent>
         {loading && (
           <Box className={styles.loaderContainer}>
-            <CircularProgress style={{ color: "#ff5c0a" }} />
+            <Loader />
           </Box>
         )}
         <Box mt={4}>
@@ -64,33 +71,20 @@ const GoogleLoginComponent = ({ open, onClose }) => {
               <Button
                 variant="contained"
                 onClick={renderProps.onClick}
-                className={styles.secondaryButton}
-                // style={{
-                //   backgroundColor: "#ff5c0a",
-                //   color: "#fff",
-                //   fontFamily: "cursive",
-                //   border: "none",
-                //   fontSize: "18px",
-                //   padding: "15px",
-                //   borderRadius: "50px",
-                //   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                //   margin: "10px 0",
-                //   transition: "box-shadow 0.3s ease",
-                // }}
+                sx={{ mt: 2, paddingInline: 5 }}
               >
-                Log In with Google
+                <Image
+                  src="/images/Google Logo.png"
+                  alt="Google Logo"
+                  width={20}
+                  height={20}
+                  style={{ borderRadius: "50%", marginInline: "10px" }}
+                />
+                Log in with Google
               </Button>
             )}
           />
         </Box>
-        {/* <Box mt={2}>
-          <button
-            className={styles.secondaryButton}
-            onClick={handleEmailLogin}
-          >
-            Or sign up / log in with email
-          </button>
-        </Box> */}
       </DialogContent>
     </Dialog>
   );

@@ -8,10 +8,12 @@ import {
   Paper,
   Link,
   IconButton,
+  TextField,
 } from "@mui/material";
 import GoogleLoginComponent from "@/components/GoogleLogin";
 import { Google, Mic } from "@mui/icons-material";
 import CheckIcon from "@mui/icons-material/Check";
+import Image from "next/image";
 
 export default function Home() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -49,10 +51,16 @@ export default function Home() {
           <Button
             variant="contained"
             color="primary"
-            sx={{ mt: 2 }}
+            sx={{ mt: 2, paddingInline: 5 }}
             onClick={handleClickOpen}
           >
-            <Google sx={{ marginRight: "2px" }} />
+            <Image
+              src="/images/Google Logo.png"
+              alt="Get it on Google Play"
+              width={20}
+              height={20}
+              style={{ borderRadius: "50%", marginInline: "10px" }}
+            />
             Log in with Google
           </Button>
         </Box>
@@ -102,7 +110,7 @@ export default function Home() {
           <Grid item xs={12} md={4}>
             <Paper elevation={3} sx={{ p: 2, textAlign: "center" }}>
               <img
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAACUCAMAAAAnDwKZAAAAZlBMVEX///9nZ2f29vY+Pj7Y2Nju7u6cnJzAwMBcXFz8/PwAAADm5uZNTU06OjrV1dWxsbG6urrKysre3t6kpKSOjo6UlJQbGxurq6tzc3N7e3uGhoYXFxdTU1MwMDBFRUVhYWEODg4kJCS9WBElAAAEBUlEQVR4nO2cjVbjKhCACfJTwgoMhJJEa+37v+RCkvaue+tqlUbrma+eGJuk+TIQCjkyhCAIgiAI8gNR7+Jr1KaFAWMYZ6a8MtOi/HFcKWhtAHi5GLK+K0uGSWtdYVqWdbvw5xowJ+lyWeuhCHVSPrbP24ftdvtwaM+xnXluD1EmvrYiIdaMbQ/MF5iPZwxHvwBD+yiTXtsQYNhB/s04QC5EeirX/8hx81xq74CY3bNLat048pSeTan/wXY9f20v2/PI0tNAidk2wqwpSIiE3VhqpKKU8/n2/muPcvvmTbnS8hxlIrZCrGpIrWs9easZUeS4iyK8HcSqtZG78fHV4j3PYR9WLWkOTUMvO+RuH9h1ZM7D5eYnKjYCFV+CijVAxRrcgKJ2qPh5ULEGqFiDG2h0bkHxmxd0Hoz4b65IPnq7wHVkzvMxRXkdmfP82Cii4ktuQPFjjc56iuqj3y5Y0C/57gVNbiKKqFiDG+h1o2INvrvih79dcHj1ElSsASrWABVrgIo1QMUaoGINULEGqFgDVKwBKtYAFWuAijVAxRqgYg1QsQaoWANUrAEq1gAVa4CKNUDFGqBiDVCxBqhYA1Sswc9TLHM+75qV5wHC/qIoqq+YqthvLizo3cpRpFYc9DRv9127l1QCbb9uXSRWtundhkVRtl13Ydw/CUv9A78gy4K+3wt7TaEzBLvdv39KNt8cRHfhhOpPw4Vt7xOn74Hb+0OXVv0Hy5IWhPhg92179/jrTZ7a9ikkt0qqkHKOEhSutTdgByfHX/e7+zfYPTXBdh0Y5rUuYZ9dr6I7fXQR9J4ZaYNomiABDMh/AUamYd8F6yZJzhfHK0X0FEZewuhsGPumGZp/0g/9KKyTpugtfleRO2NLF9k34Hwyo1+UsgZBEARBEARZC/Vy/ZXu3+u9wlX6i/50FjUlEFPkOALRfw1A5+RidE6WNtsdk46p3LmlJPdxa9tNNvNI2IOWczZFpbSbbZxcAqvm4WGBxpFDJCmCHykBoSLQGHUIPgmwoq+v6DsWOyt9/vDQgAs+2mRhD0noFKx1lJjO2M6EGPKl5LByb50fCPhgOq5tp6100qXItOCRmOrPJhQxggsdgxcOtDNNZzsV8hqzeugI3AFRo9IdHYKOUhKbB/Y6EjISlTSxvIOBaEmHDc/j79RIEq6QXY6LEHlnw+AiixCAZbGedRDyOBBSCFoHB6ONgUc3pTbQjdN6o8fo+SBBbnIglZM0H6qj8qL67aMIB66p54Zxk18eqFeGKZZHqzTXzjIQpKB93kl5PmWs1ACagQdgGkyuwhTyMZQaozT/3/31DTgNUdUfP/XPckqKenyaoJZzz43PsmVpkY5vLc2TOm0j89OSCwx/AxoSSeC4tZpeAAAAAElFTkSuQmCC"
+                src="/images/Frame (1).png"
                 alt="Speech to Text"
                 style={{ maxWidth: "100%" }}
               />
@@ -117,7 +125,7 @@ export default function Home() {
           <Grid item xs={12} md={4}>
             <Paper elevation={3} sx={{ p: 2, textAlign: "center" }}>
               <img
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAACUCAMAAAAnDwKZAAAAZlBMVEX///9nZ2f29vY+Pj7Y2Nju7u6cnJzAwMBcXFz8/PwAAADm5uZNTU06OjrV1dWxsbG6urrKysre3t6kpKSOjo6UlJQbGxurq6tzc3N7e3uGhoYXFxdTU1MwMDBFRUVhYWEODg4kJCS9WBElAAAEBUlEQVR4nO2cjVbjKhCACfJTwgoMhJJEa+37v+RCkvaue+tqlUbrma+eGJuk+TIQCjkyhCAIgiAI8gNR7+Jr1KaFAWMYZ6a8MtOi/HFcKWhtAHi5GLK+K0uGSWtdYVqWdbvw5xowJ+lyWeuhCHVSPrbP24ftdvtwaM+xnXluD1EmvrYiIdaMbQ/MF5iPZwxHvwBD+yiTXtsQYNhB/s04QC5EeirX/8hx81xq74CY3bNLat048pSeTan/wXY9f20v2/PI0tNAidk2wqwpSIiE3VhqpKKU8/n2/muPcvvmTbnS8hxlIrZCrGpIrWs9easZUeS4iyK8HcSqtZG78fHV4j3PYR9WLWkOTUMvO+RuH9h1ZM7D5eYnKjYCFV+CijVAxRrcgKJ2qPh5ULEGqFiDG2h0bkHxmxd0Hoz4b65IPnq7wHVkzvMxRXkdmfP82Cii4ktuQPFjjc56iuqj3y5Y0C/57gVNbiKKqFiDG+h1o2INvrvih79dcHj1ElSsASrWABVrgIo1QMUaoGINULEGqFgDVKwBKtYAFWuAijVAxRqgYg1QsQaoWANUrAEq1gAVa4CKNUDFGqBiDVCxBqhYA1Sswc9TLHM+75qV5wHC/qIoqq+YqthvLizo3cpRpFYc9DRv9127l1QCbb9uXSRWtundhkVRtl13Ydw/CUv9A78gy4K+3wt7TaEzBLvdv39KNt8cRHfhhOpPw4Vt7xOn74Hb+0OXVv0Hy5IWhPhg92179/jrTZ7a9ikkt0qqkHKOEhSutTdgByfHX/e7+zfYPTXBdh0Y5rUuYZ9dr6I7fXQR9J4ZaYNomiABDMh/AUamYd8F6yZJzhfHK0X0FEZewuhsGPumGZp/0g/9KKyTpugtfleRO2NLF9k34Hwyo1+UsgZBEARBEARZC/Vy/ZXu3+u9wlX6i/50FjUlEFPkOALRfw1A5+RidE6WNtsdk46p3LmlJPdxa9tNNvNI2IOWczZFpbSbbZxcAqvm4WGBxpFDJCmCHykBoSLQGHUIPgmwoq+v6DsWOyt9/vDQgAs+2mRhD0noFKx1lJjO2M6EGPKl5LByb50fCPhgOq5tp6100qXItOCRmOrPJhQxggsdgxcOtDNNZzsV8hqzeugI3AFRo9IdHYKOUhKbB/Y6EjISlTSxvIOBaEmHDc/j79RIEq6QXY6LEHlnw+AiixCAZbGedRDyOBBSCFoHB6ONgUc3pTbQjdN6o8fo+SBBbnIglZM0H6qj8qL67aMIB66p54Zxk18eqFeGKZZHqzTXzjIQpKB93kl5PmWs1ACagQdgGkyuwhTyMZQaozT/3/31DTgNUdUfP/XPckqKenyaoJZzz43PsmVpkY5vLc2TOm0j89OSCwx/AxoSSeC4tZpeAAAAAElFTkSuQmCC"
+                src="/images/Frame.png"
                 alt="Fast & Accurate"
                 style={{ maxWidth: "100%" }}
               />
@@ -132,7 +140,7 @@ export default function Home() {
           <Grid item xs={12} md={4}>
             <Paper elevation={3} sx={{ p: 2, textAlign: "center" }}>
               <img
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAACUCAMAAAAnDwKZAAAAZlBMVEX///9nZ2f29vY+Pj7Y2Nju7u6cnJzAwMBcXFz8/PwAAADm5uZNTU06OjrV1dWxsbG6urrKysre3t6kpKSOjo6UlJQbGxurq6tzc3N7e3uGhoYXFxdTU1MwMDBFRUVhYWEODg4kJCS9WBElAAAEBUlEQVR4nO2cjVbjKhCACfJTwgoMhJJEa+37v+RCkvaue+tqlUbrma+eGJuk+TIQCjkyhCAIgiAI8gNR7+Jr1KaFAWMYZ6a8MtOi/HFcKWhtAHi5GLK+K0uGSWtdYVqWdbvw5xowJ+lyWeuhCHVSPrbP24ftdvtwaM+xnXluD1EmvrYiIdaMbQ/MF5iPZwxHvwBD+yiTXtsQYNhB/s04QC5EeirX/8hx81xq74CY3bNLat048pSeTan/wXY9f20v2/PI0tNAidk2wqwpSIiE3VhqpKKU8/n2/muPcvvmTbnS8hxlIrZCrGpIrWs9easZUeS4iyK8HcSqtZG78fHV4j3PYR9WLWkOTUMvO+RuH9h1ZM7D5eYnKjYCFV+CijVAxRrcgKJ2qPh5ULEGqFiDG2h0bkHxmxd0Hoz4b65IPnq7wHVkzvMxRXkdmfP82Cii4ktuQPFjjc56iuqj3y5Y0C/57gVNbiKKqFiDG+h1o2INvrvih79dcHj1ElSsASrWABVrgIo1QMUaoGINULEGqFgDVKwBKtYAFWuAijVAxRqgYg1QsQaoWANUrAEq1gAVa4CKNUDFGqBiDVCxBqhYA1Sswc9TLHM+75qV5wHC/qIoqq+YqthvLizo3cpRpFYc9DRv9127l1QCbb9uXSRWtundhkVRtl13Ydw/CUv9A78gy4K+3wt7TaEzBLvdv39KNt8cRHfhhOpPw4Vt7xOn74Hb+0OXVv0Hy5IWhPhg92179/jrTZ7a9ikkt0qqkHKOEhSutTdgByfHX/e7+zfYPTXBdh0Y5rUuYZ9dr6I7fXQR9J4ZaYNomiABDMh/AUamYd8F6yZJzhfHK0X0FEZewuhsGPumGZp/0g/9KKyTpugtfleRO2NLF9k34Hwyo1+UsgZBEARBEARZC/Vy/ZXu3+u9wlX6i/50FjUlEFPkOALRfw1A5+RidE6WNtsdk46p3LmlJPdxa9tNNvNI2IOWczZFpbSbbZxcAqvm4WGBxpFDJCmCHykBoSLQGHUIPgmwoq+v6DsWOyt9/vDQgAs+2mRhD0noFKx1lJjO2M6EGPKl5LByb50fCPhgOq5tp6100qXItOCRmOrPJhQxggsdgxcOtDNNZzsV8hqzeugI3AFRo9IdHYKOUhKbB/Y6EjISlTSxvIOBaEmHDc/j79RIEq6QXY6LEHlnw+AiixCAZbGedRDyOBBSCFoHB6ONgUc3pTbQjdN6o8fo+SBBbnIglZM0H6qj8qL67aMIB66p54Zxk18eqFeGKZZHqzTXzjIQpKB93kl5PmWs1ACagQdgGkyuwhTyMZQaozT/3/31DTgNUdUfP/XPckqKenyaoJZzz43PsmVpkY5vLc2TOm0j89OSCwx/AxoSSeC4tZpeAAAAAElFTkSuQmCC"
+                src="/images/Frame (2).png"
                 alt="Download Text"
                 style={{ maxWidth: "100%" }}
               />
@@ -146,11 +154,23 @@ export default function Home() {
           </Grid>
         </Grid>
       </Box>
-      <Box>
-        <Box mt={5}>
+      <Box
+        sx={{
+          width: { lg: "100vw" },
+          position: "relative",
+          left: { xs: 0, sm: "-32px", md: "-100px", lg: "-232px" },
+          backgroundColor: "#B9D9D7",
+          paddingInline: { xs: "16px", sm: "32px", md: "80px", lg: "180px" },
+        }}
+      >
+        <Box mt={5} p={4}>
           <Box display="flex" gap={4} flexWrap="wrap">
             {[...Array(4)].map((_, idx) => (
-              <Box key={idx} width="48%" mt={2}>
+              <Box
+                key={idx}
+                width={{ xs: "100%", sm: "48%", md: "23%", lg: "48%" }}
+                mt={2}
+              >
                 <Box display="flex" gap={0.2}>
                   <IconButton
                     style={{
@@ -160,31 +180,144 @@ export default function Home() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize:"2px",
-                      padding:"5px"
-            
+                      width: "30px",
+                      height: "30px",
+                      marginInline: "15px",
                     }}
                   >
-                    <CheckIcon/>
+                    <CheckIcon />
                   </IconButton>
-
                   <Typography variant="h5" textAlign="left">
                     Super Private & Secure
                   </Typography>
                 </Box>
                 <Typography variant="body1" paddingInline={2} textAlign="left">
-                  You can downlaod or save You can downlaod or save You can
-                  downlaod or save You can downlaod or save You can downlaod or
-                  save You can downlaod or save
+                  You can download or save You can download or save You can
+                  download or save You can download or save You can download or
+                  save You can download or save
                 </Typography>
               </Box>
             ))}
           </Box>
-          <Box mt={5} textAlign="center" fullWidth>
-            <Button variant="contained" color="primary">
+          <Box mt={5} textAlign="center">
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ paddingInline: { sm: 5, md: 5, lg: 10 } }}
+            >
               Get Oscar Pro
             </Button>
           </Box>
+        </Box>
+      </Box>
+
+      <Grid container spacing={6} mt={4}>
+        <Grid item xs={12} md={6}>
+          <Box>
+            <Typography
+              variant="h4"
+              component="h1"
+              gutterBottom
+              textAlign="left"
+            >
+              Contact us
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Fill out the form, and we'll get back to you as soon as possible.
+              Please make sure to provide accurate contact information so we can
+              reach you promptly.
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box
+            component="form"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              "& .MuiTextField-root": {
+                backgroundColor: "#fff",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    border: "none",
+                  },
+                  "&:hover fieldset": {
+                    border: "none",
+                  },
+                  "&.Mui-focused fieldset": {
+                    border: "none",
+                  },
+                },
+              },
+            }}
+          >
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <TextField label="First Name" variant="outlined" fullWidth />
+              <TextField label="Last Name" variant="outlined" fullWidth />
+            </Box>
+            <TextField label="Email" variant="outlined" fullWidth />
+            <TextField
+              label="Message"
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={6}
+            />
+            <Button variant="contained" color="primary" type="submit">
+              Send
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+      <Box sx={{ padding: 4, textAlign: "center", mt: "20px" }}>
+        <Grid container alignItems="center" justifyContent="center" spacing={1}>
+          <Grid item>
+            <Typography variant="h5" sx={{ marginRight: 2 }}>
+              Download Oscar Mobile app from playstore
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Button
+              href="https://play.google.com/store/apps/details?id=com.example"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ padding: 0 }}
+            >
+              <Image
+                src="/images/Store download button.png"
+                alt="Get it on Google Play"
+                width={200}
+                height={60}
+                style={{ width: "100%", height: "auto", maxWidth: "150px" }}
+              />
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+      <Box sx={{ width: "100%" }} pb={2}>
+        <Box
+          sx={{
+            height: "1px",
+            backgroundColor: "#4D4D4D",
+            width: "100%",
+            mb: 1,
+          }}
+        />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "30px",
+            color: "#4D4D4D",
+          }}
+        >
+          <Typography variant="body1" textAlign="center">
+            privacy policy
+          </Typography>
+          <Typography variant="body1" textAlign="center">
+            terms of use
+          </Typography>
         </Box>
       </Box>
       <GoogleLoginComponent open={dialogOpen} onClose={handleClose} />

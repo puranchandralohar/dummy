@@ -1,260 +1,314 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
-  Box,
+  Container,
   Typography,
+  Box,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  Button as MuiButton,
-  ListItemSecondaryAction,
+  CircularProgress,
+  Button,
 } from "@mui/material";
-import { Mic, MicOff, Delete, RadioButtonUnchecked } from "@mui/icons-material";
-import { useTheme } from "@mui/material/styles";
-import { useSelector, useDispatch } from "react-redux";
-import { toggleRecordingDialog } from "../redux/recordingSlice";
+import DeleteIcon from "@mui/icons-material/Delete";
+import MicIcon from "@mui/icons-material/Mic";
+import StopIcon from "@mui/icons-material/Stop";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import SaveIcon from "@mui/icons-material/Save";
+import styles from "../styles/AAudio.module.css";
+import ALoader from "./AudioLoader";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const RecordingView = () => {
-  const theme = useTheme();
-  const dispatch = useDispatch();
-  const isRecordingDialogOpen = useSelector(
-    (state) => state.recording.isRecordingDialogOpen
-  );
+const Audio = () => {
+  const [isTransAvbl, setIsTransAvbl] = useState(true);
+  const [notes, setNotes] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isRecord, setIsRecord] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const [notes, setNotes] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [noteToDelete, setNoteToDelete] = useState(null);
+  const [correctedTranscript, setCorrectedTranscript] = useState("");
+  const [timer, setTimer] = useState(3 * 60); // 3 minutes in seconds
   const recognitionRef = useRef(null);
+  const timerRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState(null);
 
-  // Function to start recording
-  const startRecording = () => {
+  const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+
+  const handleToggleRecordingDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setIsRecord(false);
+    setTranscript("");
+    setCorrectedTranscript("");
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    clearInterval(timerRef.current);
+    setTimer(3 * 60); // Reset timer to 3 minutes
+  };
+
+  const handleStartRecording = () => {
     setIsRecord(true);
     recognitionRef.current = new window.webkitSpeechRecognition();
     recognitionRef.current.continuous = true;
     recognitionRef.current.interimResults = true;
     recognitionRef.current.lang = "en-US";
+
+    let finalTranscript = "";
+
     recognitionRef.current.onresult = (event) => {
-      let finalTranscript = "";
+      let interimTranscript = "";
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        finalTranscript += event.results[i][0].transcript + " ";
+        const result = event.results[i];
+        if (result.isFinal) {
+          finalTranscript += result[0].transcript + " ";
+        } else {
+          interimTranscript += result[0].transcript + " ";
+        }
       }
-      setTranscript(finalTranscript.trim());
+      setTranscript(finalTranscript + interimTranscript.trim());
     };
+
     recognitionRef.current.start();
+    startTimer();
   };
 
-  // Function to stop recording
-  const stopRecording = () => {
+  const startTimer = () => {
+    timerRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          handleStopRecording();
+          clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleStopRecording = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
       setIsRecord(false);
+      console.log("Recorded text:", transcript);
+      setIsLoading(true);
+      run(transcript);
     }
+    clearInterval(timerRef.current);
+    setTimer(3 * 60); // Reset timer to 3 minutes
   };
 
-  // Toggle recording
-  const handleToggleRecording = () => {
-    if (isRecord) {
-      stopRecording();
-    } else {
-      startRecording();
-    }
-  };
+  const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
-  // Save note locally
+  async function run(transcript) {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const prompt = `Correct the following text for grammar, spelling, and clarity:\n\n"${transcript}"\n\n and return only the corrected text:`;
+
+    try {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = await response.text();
+
+      // Simulate a 5-second delay before setting the corrected text
+      setTimeout(() => {
+        setCorrectedTranscript(text);
+        console.log("AI Corrected Text:", text);
+        setIsLoading(false);
+      }, 5000);
+    } catch (error) {
+      console.error("Error:", error);
+      setIsLoading(false);
+    }
+  }
+
   const handleSaveNote = () => {
-    if (transcript) {
-      const newNote = {
-        id: notes.length + 1, // Generate unique ID for local storage example
-        title: `Note ${notes.length + 1}`,
-        content: transcript,
-      };
-      setNotes([...notes, newNote]);
-      setTranscript(""); // Clear transcript after saving
-      dispatch(toggleRecordingDialog()); // Close recording dialog after saving
-    }
+    setNotes([...notes, correctedTranscript]);
+    setCorrectedTranscript("");
+    setIsDialogOpen(false);
   };
 
-  // Delete note locally
   const handleDeleteNote = (index) => {
     setNoteToDelete(index);
-    setOpenDialog(true);
+    setIsDeleteDialogOpen(true);
   };
 
-  // Confirm note deletion
   const confirmDeleteNote = () => {
-    const newNotes = notes.filter((_, i) => i !== noteToDelete);
-    setNotes(newNotes);
-    setOpenDialog(false);
+    const updatedNotes = notes.filter((_, i) => i !== noteToDelete);
+    setNotes(updatedNotes);
+    if (updatedNotes.length === 0) {
+      setIsTransAvbl(false);
+    }
+    setIsDeleteDialogOpen(false);
     setNoteToDelete(null);
   };
 
-  // Close delete confirmation dialog
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
+  const handleCloseDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
     setNoteToDelete(null);
   };
 
-  // Mock fetch notes (not needed if not using a backend)
-  const fetchNotes = () => {
-    // Simulate fetching notes from a backend
-    const mockNotes = [
-      { id: 1, title: "Note 1", content: "This is note 1" },
-      { id: 2, title: "Note 2", content: "This is note 2" },
-    ];
-    setNotes(mockNotes);
-  };
-
-  // Fetch notes on component mount
   useEffect(() => {
-    fetchNotes();
-  }, []);
+    if (isDialogOpen && !isRecord) {
+      handleStartRecording();
+    }
+  }, [isDialogOpen]);
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      height="100vh"
-      mt={4}
-      p={3}
-    >
-      <Box textAlign="center" mb={3}>
-        <Typography variant="h1" color={theme.palette.text.primary}>
-          oscar
+    <Container maxWidth="lg" className={styles.container}>
+      <Box className={styles.box}>
+        <Typography variant="h5" mb={2} color={"#4D4D4D"}>
+          My Transcripts ({notes.length})
         </Typography>
-        <Box
-          borderBottom={`10px solid ${"#FF5C0A"}`}
-          marginTop={2}
-          marginBottom={2}
-          marginInline={35}
-          borderRadius={2}
-        />
-        <Typography variant="h4" color={theme.palette.text.secondary} mb={10}>
-          Go from fuzzy thought to clear text. Fast.
-        </Typography>
+        {!notes.length > 0 ? (
+          <Box className={styles.transcriptBox}>
+            <Typography variant="h3" align="center" color={"#4D4D4D"}>
+              Start recording your first thoughts...
+            </Typography>
+          </Box>
+        ) : (
+          <Box className={styles.notesBox}>
+            {notes.map((note, index) => (
+              <Box key={index} className={styles.noteBox}>
+                <Box className={styles.noteContent}>
+                  <Typography variant="body1" className={styles.noteText}>
+                    {note}
+                  </Typography>
+                </Box>
+                <IconButton
+                  className={styles.deleteIcon}
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => handleDeleteNote(index)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
+        )}
+      </Box>
+      <Box
+        // className={`${styles.micContainer} ${isRecord ? styles.recording : ""}`}
+        className={`${styles.micContainer}`}
+      >
+        <Box className={styles.outerCircle}>
+          <Box className={styles.innerCircle}>
+            <IconButton
+              sx={{ color: "#fff" }}
+              onClick={handleToggleRecordingDialog}
+            >
+              <MicIcon sx={{ fontSize: "32px" }} />
+            </IconButton>
+          </Box>
+        </Box>
       </Box>
 
-      {notes.length > 0 && (
-        <>
-          <Box
-            mb={3}
-            width="50%"
-            boxShadow={3}
-            p={3}
-            borderRadius={2}
-            bgcolor={theme.palette.background.paper}
-          >
-            <Typography
-              variant="h6"
-              align="center"
-              color={theme.palette.text.primary}
-            >
-              Saved Notes
-            </Typography>
-            <List>
-              {notes.map((note, index) => (
-                <ListItem
-                  key={note.id}
-                  divider
-                  sx={{ color: noteToDelete === index ? "gray" : "black" }}
-                >
-                  <IconButton
-                    edge="start"
-                    onClick={() => handleDeleteNote(index)}
-                  >
-                    <RadioButtonUnchecked />
-                  </IconButton>
-                  <ListItemText primary={note.title} secondary={note.content} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteNote(index)}
-                    >
-                      <Delete />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-
-          <Box
-            boxShadow={2}
-            color={"gray"}
-            padding={2}
-            borderRadius={2}
-            bgcolor={theme.palette.background.paper}
-          >
-            <Typography variant="h6" color={theme.palette.text.primary}>
-              {notes.length}/10 notes saved
-            </Typography>
-          </Box>
-        </>
-      )}
       <Dialog
-        open={isRecordingDialogOpen}
-        onClose={() => dispatch(toggleRecordingDialog())}
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+        sx={{
+          "& .MuiPaper-root": { backgroundColor: "#99cac0" },
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <DialogTitle>Record Note</DialogTitle>
+        <DialogTitle sx={{ color: "#fff" }}>Recording</DialogTitle>
         <DialogContent>
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <IconButton
-              color={isRecord ? "secondary" : "primary"}
-              onClick={handleToggleRecording}
+          {!correctedTranscript && (
+            <>
+              <Typography variant="h6" sx={{ color: "#fff" }}>
+                {Math.floor(timer / 60)}:{("0" + (timer % 60)).slice(-2)}
+              </Typography>
+              <Typography variant="body1" sx={{ color: "#fff" }}>
+                <Box
+                  className={`${styles.micContainerdialog} ${
+                    isRecord ? styles.recording : ""
+                  }`}
+                  marginInline={10}
+                >
+                  <Box
+                    backgroundColor="hsl(189, 45%, 86%)"
+                    borderRadius="50%"
+                    padding="20px"
+                  >
+                    <Box
+                      backgroundColor="#005555"
+                      borderRadius="50%"
+                      padding="5px"
+                    >
+                      <IconButton sx={{ color: "#fff" }}>
+                        <MicIcon />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                </Box>
+              </Typography>
+            </>
+          )}
+          {isLoading && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                mt: 2,
+              }}
             >
-              {isRecord ? (
-                <MicOff fontSize="large" />
-              ) : (
-                <Mic fontSize="large" />
-              )}
-            </IconButton>
-            <Typography variant="body1" mt={2}>
-              {transcript}
+              {/* <CircularProgress sx={{ color: "#fff" }} /> */}
+              <ALoader />
+            </Box>
+          )}
+          {correctedTranscript && (
+            <Typography variant="body1" sx={{ color: "#fff", mt: 2 }}>
+              Corrected Text: {correctedTranscript}
             </Typography>
-          </Box>
+          )}
         </DialogContent>
         <DialogActions>
-          <MuiButton
-            onClick={() => dispatch(toggleRecordingDialog())}
-            color="primary"
-          >
-            Cancel
-          </MuiButton>
-          <MuiButton
-            onClick={handleSaveNote}
-            color="primary"
-            disabled={!transcript}
-          >
-            Save
-          </MuiButton>
+          <IconButton onClick={handleCloseDialog} color="secondary">
+            <RestartAltIcon sx={{ color: "#fff" }} />
+          </IconButton>
+          {correctedTranscript ? (
+            <Button
+              onClick={handleSaveNote}
+              color="primary"
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
+              Save
+            </Button>
+          ) : (
+            <IconButton onClick={handleStopRecording} color="primary">
+              <StopIcon sx={{ color: "#fff" }} />
+            </IconButton>
+          )}
         </DialogActions>
       </Dialog>
-
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Delete Note</DialogTitle>
+      <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this note?
-          </DialogContentText>
+          <Typography>Are you sure you want to delete this note?</Typography>
         </DialogContent>
         <DialogActions>
-          <MuiButton onClick={handleCloseDialog} color="primary">
+          <Button onClick={handleCloseDeleteDialog} color="secondary">
             Cancel
-          </MuiButton>
-          <MuiButton onClick={confirmDeleteNote} color="primary" autoFocus>
+          </Button>
+          <Button
+            onClick={confirmDeleteNote}
+            color="primary"
+            variant="contained"
+          >
             Delete
-          </MuiButton>
+          </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Container>
   );
 };
-
-export default RecordingView;
+export default Audio;

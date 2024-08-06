@@ -20,7 +20,7 @@ const ProfileDialog = ({ open, onClose }) => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("googleUser"));
-    setUserDetails(user);
+    setUserDetails(user.user);
   }, []);
 
   const handleLogout = () => {
@@ -39,35 +39,60 @@ const ProfileDialog = ({ open, onClose }) => {
   const handleClosePlanDialog = () => setOpenPlanDialog(false);
   const handleCloseFeedbackDialog = () => setOpenFeedbackDialog(false);
   const handleCloseDemoDialog = () => setOpenDemoDialog(false);
-
   return (
     <>
       <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
         <DialogTitle textAlign="center">Student Details</DialogTitle>
         <DialogContent>
           {userDetails ? (
-            <Box display="flex" flexDirection="column" alignItems="center" p={2}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              p={2}
+            >
               <Avatar
-                alt={userDetails.name}
-                src={userDetails.picture}
+                alt={userDetails.firstName}
+                src={userDetails.profilePicUrl}
                 sx={{ width: 80, height: 80, mb: 2 }}
               />
-              <Typography variant="h6">{userDetails.name}</Typography>
+              <Typography variant="h6">
+                {userDetails.firstName} {userDetails.lastName}
+              </Typography>
               <Typography variant="body1" color="textSecondary">
                 {userDetails.email}
               </Typography>
               {/* Add other details as needed */}
               <Divider sx={{ width: "100%", my: 2 }} />
-              <Button onClick={handleOpenAccountDialog} variant="outlined" fullWidth>
+              <Button
+                onClick={handleOpenAccountDialog}
+                variant="outlined"
+                fullWidth
+              >
                 Account & Wallet Balance
               </Button>
-              <Button onClick={handleOpenPlanDialog} variant="outlined" fullWidth sx={{ mt: 1 }}>
+              <Button
+                onClick={handleOpenPlanDialog}
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 1 }}
+              >
                 Plan Type
               </Button>
-              <Button onClick={handleOpenFeedbackDialog} variant="outlined" fullWidth sx={{ mt: 1 }}>
+              <Button
+                onClick={handleOpenFeedbackDialog}
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 1 }}
+              >
                 Feedback
               </Button>
-              <Button onClick={handleOpenDemoDialog} variant="outlined" fullWidth sx={{ mt: 1 }}>
+              <Button
+                onClick={handleOpenDemoDialog}
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 1 }}
+              >
                 Demo File
               </Button>
             </Box>
@@ -86,25 +111,40 @@ const ProfileDialog = ({ open, onClose }) => {
       </Dialog>
 
       {/* Account Dialog */}
-      <Dialog open={openAccountDialog} onClose={handleCloseAccountDialog} maxWidth="xs" fullWidth>
+      <Dialog
+        open={openAccountDialog}
+        onClose={handleCloseAccountDialog}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle textAlign="center">Account & Wallet Balance</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
             Name: {userDetails ? userDetails.name : "N/A"}
           </Typography>
           <Typography variant="body1">
-            Free transcripts remaining: {userDetails ? userDetails.freeTranscripts : "N/A"}
+            Free transcripts remaining:{" "}
+            {userDetails ? userDetails.freeTranscripts : "N/A"}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAccountDialog} variant="outlined" color="secondary">
+          <Button
+            onClick={handleCloseAccountDialog}
+            variant="outlined"
+            color="secondary"
+          >
             Close
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Plan Type Dialog */}
-      <Dialog open={openPlanDialog} onClose={handleClosePlanDialog} maxWidth="xs" fullWidth>
+      <Dialog
+        open={openPlanDialog}
+        onClose={handleClosePlanDialog}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle textAlign="center">Plan Type</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
@@ -112,14 +152,23 @@ const ProfileDialog = ({ open, onClose }) => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClosePlanDialog} variant="outlined" color="secondary">
+          <Button
+            onClick={handleClosePlanDialog}
+            variant="outlined"
+            color="secondary"
+          >
             Close
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Feedback Dialog */}
-      <Dialog open={openFeedbackDialog} onClose={handleCloseFeedbackDialog} maxWidth="xs" fullWidth>
+      <Dialog
+        open={openFeedbackDialog}
+        onClose={handleCloseFeedbackDialog}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle textAlign="center">Feedback</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
@@ -128,20 +177,31 @@ const ProfileDialog = ({ open, onClose }) => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => window.location.href = "give specific email to send feedback"}
+            onClick={() =>
+              (window.location.href = "give specific email to send feedback")
+            }
             variant="contained"
             color="primary"
           >
             Send Feedback
           </Button>
-          <Button onClick={handleCloseFeedbackDialog} variant="outlined" color="secondary">
+          <Button
+            onClick={handleCloseFeedbackDialog}
+            variant="outlined"
+            color="secondary"
+          >
             Close
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Demo File Dialog */}
-      <Dialog open={openDemoDialog} onClose={handleCloseDemoDialog} maxWidth="xs" fullWidth>
+      <Dialog
+        open={openDemoDialog}
+        onClose={handleCloseDemoDialog}
+        maxWidth="xs"
+        fullWidth
+      >
         <DialogTitle textAlign="center">Demo File</DialogTitle>
         <DialogContent>
           <Typography variant="body1">
@@ -150,13 +210,22 @@ const ProfileDialog = ({ open, onClose }) => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => window.open("https://www.youtube.com/watch?v=demo_video_link", "_blank")}
+            onClick={() =>
+              window.open(
+                "https://www.youtube.com/watch?v=demo_video_link",
+                "_blank"
+              )
+            }
             variant="contained"
             color="primary"
           >
             Watch Demo
           </Button>
-          <Button onClick={handleCloseDemoDialog} variant="outlined" color="secondary">
+          <Button
+            onClick={handleCloseDemoDialog}
+            variant="outlined"
+            color="secondary"
+          >
             Close
           </Button>
         </DialogActions>

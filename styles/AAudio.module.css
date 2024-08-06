@@ -1,5 +1,4 @@
 
-
 .container {
     height: 85vh;
     display: flex;
@@ -8,6 +7,7 @@
     align-items: center;
     padding-top: 16px; /* Equivalent to py: 4 */
     padding-bottom: 16px; /* Equivalent to py: 4 */
+    scroll-behavior: smooth;
   }
   
   .box {
@@ -69,3 +69,72 @@
     align-items: center;
   }
   
+
+/* Container for notes */
+.notesBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* Space between notes */
+}
+
+/* Individual note box */
+.noteBox {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  width: calc(33.33% - 16px); /* Adjust width for how many notes per row */
+  box-sizing: border-box; /* Include padding and border in the element's total width */
+  max-height: 150px; /* Set a fixed maximum height */
+  overflow: hidden; /* Hide overflow content */
+}
+
+/* Note content area */
+.noteContent {
+  flex: 1;
+  overflow: hidden; /* Ensure no scrollbars appear */
+}
+
+/* Ensure text wraps properly and fits within the note box */
+.noteText {
+  margin: 0;
+  white-space: pre-wrap; /* Preserve whitespace and wrap text */
+  overflow: hidden; /* Hide any overflow text */
+  text-overflow: ellipsis; /* Add ellipsis if text overflows */
+}
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.micContainer{
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 20px;
+}
+.outerCircle {
+  background-color: hsl(189, 45%, 86%);
+  border-radius: 50%;
+  padding: 30px;
+}
+
+.innerCircle {
+  background-color: #005555;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.recording {
+  animation: pulse 1s infinite;
+}
+

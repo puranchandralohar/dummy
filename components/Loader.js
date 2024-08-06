@@ -6,7 +6,7 @@ import styles from '../styles/Loader.module.css';
 const Loader = () => {
   return (
     <Box className={styles.loaderContainer}>
-      <CircularProgress style={{ color: '#ff5c0a' }} size={80} thickness={4} />
+      <CircularProgress style={{ color: '#51A09B' }} size={80} thickness={4} />
     </Box>
   );
 };

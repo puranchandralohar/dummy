@@ -19,7 +19,7 @@ const Navbar = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("googleUser"));
     if (user) {
-      setUserDetails(user);
+      setUserDetails(user.user);
     }
   }, []);
 
@@ -31,11 +31,6 @@ const Navbar = () => {
     setDialogOpen(false);
   };
 
-  // const handleLogout = () => {
-  //   localStorage.clear();
-  //   router.push("/");
-  // };
-
   return (
     <Box position="static" className={styles.navbar}>
       <Toolbar className={styles.toolbar}>
@@ -46,7 +41,7 @@ const Navbar = () => {
         <Typography variant="h6" component="div">
           <IconButton onClick={handleOpenDialog}>
             {userDetails ? (
-              <Avatar alt={userDetails.name} src={userDetails.picture} />
+              <Avatar alt={userDetails.firstName} src={userDetails.profilePicUrl}/>
             ) : (
               <Button className={styles.navButton}>Profile</Button>
             )}
