@@ -89,5 +89,4 @@ const GoogleLoginComponent = ({ open, onClose }) => {
     </Dialog>
   );
 };
-
 export default GoogleLoginComponent;

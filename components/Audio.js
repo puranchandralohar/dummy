@@ -19,6 +19,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import styles from "../styles/AAudio.module.css";
 import ALoader from "./AudioLoader";
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+import ReacodringLoader from  "./RecoardingAnimation.jsx"
+import ProcessingAnimation from "./ProcessingAnimation";
 
 const Audio = () => {
   const [isTransAvbl, setIsTransAvbl] = useState(true);
@@ -226,43 +228,10 @@ const Audio = () => {
                 {Math.floor(timer / 60)}:{("0" + (timer % 60)).slice(-2)}
               </Typography>
               <Typography variant="body1" sx={{ color: "#fff" }}>
-                <Box
-                  className={`${styles.micContainerdialog} ${
-                    isRecord ? styles.recording : ""
-                  }`}
-                  marginInline={10}
-                >
-                  <Box
-                    backgroundColor="hsl(189, 45%, 86%)"
-                    borderRadius="50%"
-                    padding="20px"
-                  >
-                    <Box
-                      backgroundColor="#005555"
-                      borderRadius="50%"
-                      padding="5px"
-                    >
-                      <IconButton sx={{ color: "#fff" }}>
-                        <MicIcon />
-                      </IconButton>
-                    </Box>
-                  </Box>
-                </Box>
+              {isRecord ?<ReacodringLoader/> : <ProcessingAnimation/>}
+                
               </Typography>
             </>
-          )}
-          {isLoading && (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                mt: 2,
-              }}
-            >
-              {/* <CircularProgress sx={{ color: "#fff" }} /> */}
-              <ALoader />
-            </Box>
           )}
           {correctedTranscript && (
             <Typography variant="body1" sx={{ color: "#fff", mt: 2 }}>
