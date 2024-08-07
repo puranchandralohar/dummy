@@ -126,8 +126,32 @@ const Audio = () => {
     }
   }
 
+  const saveTranscriptToAPI = async (transcript) => {
+    try {
+      const response = await fetch("https://dev-oscar.merakilearn.org/api/v1/transcriptions/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+        },
+        body: JSON.stringify({ transcribedText: transcript }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to save transcript to API");
+      }
+  
+      const data = await response.json();
+      console.log("Transcript saved:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  
+
   const handleSaveNote = () => {
     setNotes([...notes, correctedTranscript]);
+    saveTranscriptToAPI(correctedTranscript);
     setCorrectedTranscript("");
     setIsDialogOpen(false);
   };
