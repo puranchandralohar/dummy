@@ -19,7 +19,7 @@ const VideoLoader = () => {
         src="/Animation%20-%201723024495535.gif"
         alt="Loading animation"
         style={{
-          width: "150px",
+          width: "100px",
           height: "100px",
           objectFit: "cover",
         }}

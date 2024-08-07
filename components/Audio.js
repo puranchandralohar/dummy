@@ -145,10 +145,35 @@ const Audio = () => {
   
       const data = await response.json();
       console.log("Transcript saved:", data);
+      // setNotes((prevNotes) => [...prevNotes, transcript]);
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  const fetchTranscriptions = async () => {
+    try {
+      const response = await fetch("https://dev-oscar.merakilearn.org/api/v1/transcriptions", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('googleToken')}`,  // Assuming you need to pass the API key in the Authorization header
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch transcriptions");
+      }
+
+      const data = await response.json();
+      setNotes(data.map((item) => item.transcribedText));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTranscriptions();
+  }, []);
   
 
   const handleSaveNote = () => {
@@ -238,7 +263,7 @@ const Audio = () => {
         open={isDialogOpen}
         onClose={handleCloseDialog}
         sx={{
-          "& .MuiPaper-root": { backgroundColor: "#99cac0" },
+          "& .MuiPaper-root": { backgroundColor: "#99cac0" , height:"300px"},
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -259,7 +284,7 @@ const Audio = () => {
           )}
           {correctedTranscript && (
             <Typography variant="body1" sx={{ color: "#fff", mt: 2 }}>
-              Corrected Text: {correctedTranscript}
+              {correctedTranscript}
             </Typography>
           )}
         </DialogContent>
