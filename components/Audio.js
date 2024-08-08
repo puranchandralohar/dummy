@@ -134,7 +134,7 @@ const Audio = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem('googleToken')}`,  // Assuming you need to pass the API key in the Authorization header
+          "Authorization": `Bearer ${localStorage.getItem('googleToken')}`, // Assuming you need to pass the API key in the Authorization header
         },
         body: JSON.stringify({ transcribedText: transcript }),
       });
@@ -145,11 +145,13 @@ const Audio = () => {
   
       const data = await response.json();
       console.log("Transcript saved:", data);
-      // setNotes((prevNotes) => [...prevNotes, transcript]);
+      return data; // Return the saved note
     } catch (error) {
       console.error("Error:", error);
+      return null;
     }
   };
+  
 
   const fetchTranscriptions = async () => {
     try {
@@ -165,7 +167,7 @@ const Audio = () => {
       }
 
       const data = await response.json();
-      setNotes(data.map((item) => item.transcribedText));
+      setNotes(data.map((item) => item));
     } catch (error) {
       console.error("Error:", error);
     }
@@ -176,27 +178,48 @@ const Audio = () => {
   }, []);
   
 
-  const handleSaveNote = () => {
-    setNotes([...notes, correctedTranscript]);
-    saveTranscriptToAPI(correctedTranscript);
+  const handleSaveNote = async () => {
+    const savedNote = await saveTranscriptToAPI(correctedTranscript);
+    if (savedNote) {
+      setNotes((prevNotes) => [...prevNotes, savedNote]);
+    }
     setCorrectedTranscript("");
     setIsDialogOpen(false);
   };
+  
 
-  const handleDeleteNote = (index) => {
-    setNoteToDelete(index);
+  const handleDeleteNote = (id) => {
+    setNoteToDelete({ id });
     setIsDeleteDialogOpen(true);
   };
 
-  const confirmDeleteNote = () => {
-    const updatedNotes = notes.filter((_, i) => i !== noteToDelete);
-    setNotes(updatedNotes);
-    if (updatedNotes.length === 0) {
-      setIsTransAvbl(false);
+
+  const confirmDeleteNote = async () => {
+    try {
+      const response = await fetch(`https://dev-oscar.merakilearn.org/api/v1/transcriptions/${noteToDelete.id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem('googleToken')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete note from API");
+      }
+  
+      const updatedNotes = notes.filter((_, i) => i !== noteToDelete.id);
+      setNotes(updatedNotes);
+      if (updatedNotes.length === 0) {
+        setIsTransAvbl(false);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setNoteToDelete(null);
     }
-    setIsDeleteDialogOpen(false);
-    setNoteToDelete(null);
   };
+  
 
   const handleCloseDeleteDialog = () => {
     setIsDeleteDialogOpen(false);
@@ -227,14 +250,14 @@ const Audio = () => {
               <Box key={index} className={styles.noteBox}>
                 <Box className={styles.noteContent}>
                   <Typography variant="body1" className={styles.noteText}>
-                    {note}
+                    {note.transcribedText}
                   </Typography>
                 </Box>
                 <IconButton
                   className={styles.deleteIcon}
                   edge="end"
                   aria-label="delete"
-                  onClick={() => handleDeleteNote(index)}
+                  onClick={() => handleDeleteNote(note.id)}
                 >
                   <DeleteIcon />
                 </IconButton>
