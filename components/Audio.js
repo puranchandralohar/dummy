@@ -17,9 +17,8 @@ import StopIcon from "@mui/icons-material/Stop";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import SaveIcon from "@mui/icons-material/Save";
 import styles from "../styles/AAudio.module.css";
-import ALoader from "./AudioLoader";
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-import ReacodringLoader from  "./RecoardingAnimation.jsx"
+import ReacodringLoader from "./RecoardingAnimation.jsx";
 import ProcessingAnimation from "./ProcessingAnimation";
 
 const Audio = () => {
@@ -130,19 +129,22 @@ const Audio = () => {
 
   const saveTranscriptToAPI = async (transcript) => {
     try {
-      const response = await fetch("https://dev-oscar.merakilearn.org/api/v1/transcriptions/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem('googleToken')}`, // Assuming you need to pass the API key in the Authorization header
-        },
-        body: JSON.stringify({ transcribedText: transcript }),
-      });
-  
+      const response = await fetch(
+        "https://dev-oscar.merakilearn.org/api/v1/transcriptions/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+          },
+          body: JSON.stringify({ transcribedText: transcript }),
+        }
+      );
+
       if (!response.ok) {
         throw new Error("Failed to save transcript to API");
       }
-  
+
       const data = await response.json();
       console.log("Transcript saved:", data);
       return data; // Return the saved note
@@ -151,16 +153,18 @@ const Audio = () => {
       return null;
     }
   };
-  
 
   const fetchTranscriptions = async () => {
     try {
-      const response = await fetch("https://dev-oscar.merakilearn.org/api/v1/transcriptions", {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('googleToken')}`,  // Assuming you need to pass the API key in the Authorization header
-        },
-      });
+      const response = await fetch(
+        "https://dev-oscar.merakilearn.org/api/v1/transcriptions",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("googleToken")}`, // Assuming you need to pass the API key in the Authorization header
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch transcriptions");
@@ -176,12 +180,13 @@ const Audio = () => {
   useEffect(() => {
     fetchTranscriptions();
   }, []);
-  
+
 
   const handleSaveNote = async () => {
     const savedNote = await saveTranscriptToAPI(correctedTranscript);
     if (savedNote) {
       setNotes((prevNotes) => [...prevNotes, savedNote]);
+      fetchTranscriptions();  // Fetch the updated list of notes
     }
     setCorrectedTranscript("");
     setIsDialogOpen(false);
@@ -193,23 +198,29 @@ const Audio = () => {
     setIsDeleteDialogOpen(true);
   };
 
-
   const confirmDeleteNote = async () => {
     try {
-      const response = await fetch(`https://dev-oscar.merakilearn.org/api/v1/transcriptions/${noteToDelete.id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem('googleToken')}`,
-        },
-      });
-  
+      const response = await fetch(
+        `https://dev-oscar.merakilearn.org/api/v1/transcriptions/${noteToDelete.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("googleToken")}`,
+          },
+        }
+      );
+
       if (!response.ok) {
         throw new Error("Failed to delete note from API");
       }
-  
-      const updatedNotes = notes.filter((_, i) => i !== noteToDelete.id);
-      setNotes(updatedNotes);
-      if (updatedNotes.length === 0) {
+
+      // Remove the deleted note from the notes state
+      setNotes((prevNotes) =>
+        prevNotes.filter((note) => note.id !== noteToDelete.id)
+      );
+
+      // If no notes are left, set isTransAvbl to false
+      if (notes.length === 1) {
         setIsTransAvbl(false);
       }
     } catch (error) {
@@ -219,7 +230,6 @@ const Audio = () => {
       setNoteToDelete(null);
     }
   };
-  
 
   const handleCloseDeleteDialog = () => {
     setIsDeleteDialogOpen(false);
@@ -258,6 +268,7 @@ const Audio = () => {
                   edge="end"
                   aria-label="delete"
                   onClick={() => handleDeleteNote(note.id)}
+                  sx={{marginLeft:"80%"}}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -286,7 +297,7 @@ const Audio = () => {
         open={isDialogOpen}
         onClose={handleCloseDialog}
         sx={{
-          "& .MuiPaper-root": { backgroundColor: "#99cac0" , height:"300px"},
+          "& .MuiPaper-root": { backgroundColor: "#99cac0", height: "300px" },
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -300,8 +311,7 @@ const Audio = () => {
                 {Math.floor(timer / 60)}:{("0" + (timer % 60)).slice(-2)}
               </Typography>
               <Typography variant="body1" sx={{ color: "#fff" }}>
-              {isRecord ?<ReacodringLoader/> : <ProcessingAnimation/>}
-                
+                {isRecord ? <ReacodringLoader /> : <ProcessingAnimation />}
               </Typography>
             </>
           )}

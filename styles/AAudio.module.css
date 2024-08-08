@@ -138,3 +138,27 @@
   animation: pulse 1s infinite;
 }
 
+
+/* Media Queries for Responsiveness */
+
+/* For smaller screens, 768px and below */
+@media (max-width: 768px) {
+  .notesBox {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  }
+
+  .noteBox {
+    width: calc(50% - 16px); /* Adjust width for two columns */
+  }
+}
+
+/* For extra small screens, 480px and below */
+@media (max-width: 480px) {
+  .notesBox {
+    grid-template-columns: 1fr; /* 1 column */
+  }
+
+  .noteBox {
+    width: 100%; /* Full width */
+  }
+}

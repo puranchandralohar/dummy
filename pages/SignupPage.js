@@ -156,11 +156,12 @@ export default function Home() {
       </Box>
       <Box
         sx={{
-          width: { lg: "100vw" },
+          // width: { lg: "100vw" },
           position: "relative",
-          left: { xs: 0, sm: "-32px", md: "-100px", lg: "-232px" },
+          // left: {lg: "-150px" },
           backgroundColor: "#B9D9D7",
-          paddingInline: { xs: "16px", sm: "32px", md: "80px", lg: "180px" },
+          paddingInline: {lg: "100px" },
+          marginInline: {lg: "-150px" },
         }}
       >
         <Box mt={5} p={4}>
