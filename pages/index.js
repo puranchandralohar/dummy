@@ -12,7 +12,7 @@ const Home = () => {
     const googleToken = localStorage.getItem("googleToken");
 
     if (googleUser && googleToken) {
-      router.push("/Audio");
+      router.push("/dashboard");
     } else {
       setLoading(false);
     }

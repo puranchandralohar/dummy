@@ -15,7 +15,7 @@ const DownLoadAppstore = () => {
           mt:4
         }}
       >
-        <Typography variant="h6" fontWeight={700}>
+        <Typography variant="h6" fontWeight={700} textAlign="center">
           Try Transcription on the Go via Oscar App
         </Typography>
         <Image

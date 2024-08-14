@@ -5,7 +5,7 @@ import Image from "next/image";
 const HowWork = () => {
   return (
     <Container maxWidth="md">
-      <Typography variant="h5" mt={5} textAlign="center" pb={2}>
+      <Typography variant="h5" mt={7} textAlign="center" pb={2}>
         How it works?
       </Typography>
       <Grid container spacing={1} justifyContent="center">

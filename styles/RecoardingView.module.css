@@ -54,7 +54,6 @@
   .outerCircle {
     background-color: #cae9eb;
     border-radius: 50%;
-    opacity: 0.5;
     padding: 16px;
     display: flex;
     justify-content: center;
@@ -62,7 +61,7 @@
   }
   
   .innerCircle {
-    background-color: #51a09b;
+    background-color: #51A09B;
     border-radius: 50%;
     padding: 8px;
     display: flex;
@@ -138,7 +137,7 @@
 }
 
 .innerCircle {
-  background-color: #005555;
+  background-color: #51A09B;
   border-radius: 50%;
   padding: 5px;
 }

@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import {
-  Container,
   Typography,
   Box,
   IconButton,
@@ -8,7 +7,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  CircularProgress,
   Button,
 } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
@@ -26,6 +24,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import EditIcon from "@mui/icons-material/Edit";
 import Image from "next/image";
 import AudioHeader from "./AudioHeader";
+import Tooltip from "@mui/material/Tooltip";
 
 const ReacodringView = () => {
   const [isTransAvbl, setIsTransAvbl] = useState(true);
@@ -41,6 +40,13 @@ const ReacodringView = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState(null);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [tooltipTexts, setTooltipTexts] = useState({
+    copy: "Copy to clipboard",
+    share: "Share note",
+    download: "Download note",
+    delete: "Delete note",
+    restart: "Restart recording",
+  });
 
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
@@ -60,6 +66,19 @@ const ReacodringView = () => {
     setIsResetDialogOpen(false);
     setIsDialogOpen(false);
     setIsRecord(false);
+    setTranscript("");
+    setCorrectedTranscript("");
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    clearInterval(timerRef.current);
+    setTimer(3 * 60); // Reset timer to 3 minutes
+  };
+
+  const handleResetRecordingLast = () => {
+    setIsRecord(false);
+    setIsResetDialogOpen(false);
+    setIsDialogOpen(false);
     setTranscript("");
     setCorrectedTranscript("");
     if (recognitionRef.current) {
@@ -124,7 +143,7 @@ const ReacodringView = () => {
 
   async function run(transcript) {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const prompt = `Correct the following text for grammar, spelling, and clarity:\n\n"${transcript}"\n\n and return only the corrected text with a heading:`;
+    const prompt = `Correct the following text for grammar, spelling, and clarity:\n\n"${transcript}"\n\n and return only the corrected text`;
 
     try {
       const result = await model.generateContent(prompt);
@@ -256,7 +275,15 @@ const ReacodringView = () => {
     }
   }, [isDialogOpen]);
 
+  const handleTooltipChange = (key, newValue) => {
+    setTooltipTexts((prev) => ({
+      ...prev,
+      [key]: newValue,
+    }));
+  };
+
   const handleDownloadNote = () => {
+    handleTooltipChange("download", "Note downloaded");
     const element = document.createElement("a");
     const file = new Blob([correctedTranscript], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
@@ -267,7 +294,7 @@ const ReacodringView = () => {
 
   const handleCopyNote = () => {
     navigator.clipboard.writeText(correctedTranscript).then(() => {
-      alert("Text copied to clipboard");
+      handleTooltipChange("copy", "Copied!");
     });
   };
 
@@ -279,14 +306,17 @@ const ReacodringView = () => {
           text: correctedTranscript,
           url: window.location.href,
         });
-        alert("Note shared successfully");
+        // alert("Note shared successfully");
       } catch (error) {
         console.error("Error sharing note:", error);
       }
     } else {
       // Fallback for unsupported browsers
       navigator.clipboard.writeText(correctedTranscript).then(() => {
-        alert("Text copied to clipboard. You can paste it anywhere to share.");
+        handleTooltipChange(
+          "share",
+          "Text copied to clipboard! You can share."
+        );
       });
     }
   };
@@ -295,6 +325,13 @@ const ReacodringView = () => {
     // Enable editing mode or open an editor for the correctedTranscript
     // For example, you could set a state variable that makes the correctedTranscript editable
     // setIsEditing(true);
+  };
+
+  const handleDeleteCurrentNote = () => {
+    // Delete the current note
+    handleTooltipChange("delete", "Note deleted");
+    setCorrectedTranscript("");
+    setIsDialogOpen(false);
   };
 
   return (
@@ -375,24 +412,36 @@ const ReacodringView = () => {
             </Box>
           </Box>
 
-          <Typography>
-            {notes.length > 0
-              ? "Transcribe your thoughts in a click"
-              : "Tap the mic to start"}
+          <Typography fontWeight={700} fontSize="18px" zIndex={1000}>
+            {notes.length > 0 ? (
+              "Transcribe your thoughts in a click"
+            ) : (
+              <Typography fontWeight={400} align="center">
+                Tap the mic to start
+              </Typography>
+            )}
           </Typography>
         </Box>
         <Dialog
           open={isDialogOpen}
           onClose={handleCloseDialog}
           sx={{
-            "& .MuiPaper-root": { backgroundColor: "#99cac0", height: "400px" },
+            "& .MuiPaper-root": {
+              backgroundColor: "#99cac0",
+              height: !isRecord ? "400px" : "auto",
+            },
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
           <DialogTitle sx={{ color: "#fff" }}>
-            {!correctedTranscript ? "Recording" : "Your transcript is ready !"}
+            {/* {!correctedTranscript ? "Recording" : "Your transcript is ready !"} */}
+            {!correctedTranscript
+              ? isRecord
+                ? "Recording.."
+                : "Processing..."
+              : "Your transcript is ready !"}
           </DialogTitle>
           <DialogContent>
             {!correctedTranscript && (
@@ -421,8 +470,7 @@ const ReacodringView = () => {
               </Typography>
             )}
           </DialogContent>
-          <DialogActions
-          >
+          <DialogActions>
             {!correctedTranscript && (
               <IconButton onClick={handleCloseDialog} color="secondary">
                 <RestartAltIcon sx={{ color: "#fff" }} />
@@ -435,29 +483,44 @@ const ReacodringView = () => {
                     display: "flex",
                     backgroundColor: "#fff",
                     borderRadius: "10px",
-                    // padding: "10px",
-                    // justifyContent: "left",
-                    // width:"100%"
                   }}
                 >
-                  <IconButton onClick={handleCloseDialog} color="secondary">
-                    <RestartAltIcon sx={{ color: "#51A09B" }} />
-                  </IconButton>
+                  <Tooltip title={tooltipTexts.restart}>
+                    <IconButton
+                      onClick={handleResetRecordingLast}
+                      color="secondary"
+                    >
+                      <RestartAltIcon sx={{ color: "#51A09B" }} />
+                    </IconButton>
+                  </Tooltip>
+                  {/* <Tooltip title="Edit note">
                   <IconButton onClick={handleEditNote} color="primary">
                     <EditIcon sx={{ color: "#51A09B" }} />
                   </IconButton>
-                  <IconButton onClick={handleCopyNote} color="primary">
-                    <ContentCopyIcon sx={{ color: "#51A09B" }}  />
-                  </IconButton>
-                  <IconButton onClick={handleShareNote} color="primary">
-                    <ShareIcon sx={{ color: "#51A09B" }} />
-                  </IconButton>
-                  <IconButton onClick={handleDownloadNote} color="primary">
-                    <DownloadIcon sx={{ color: "#51A09B" }} />
-                  </IconButton>
-                  <IconButton onClick={handleEditNote} color="primary">
-                    <DeleteOutlineIcon sx={{ color: "#51A09B" }}  />
-                  </IconButton>
+                  </Tooltip> */}
+                  <Tooltip title={tooltipTexts.copy}>
+                    <IconButton onClick={handleCopyNote} color="primary">
+                      <ContentCopyIcon sx={{ color: "#51A09B" }} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={tooltipTexts.share}>
+                    <IconButton onClick={handleShareNote} color="primary">
+                      <ShareIcon sx={{ color: "#51A09B" }} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={tooltipTexts.download}>
+                    <IconButton onClick={handleDownloadNote} color="primary">
+                      <DownloadIcon sx={{ color: "#51A09B" }} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={tooltipTexts.delete}>
+                    <IconButton
+                      onClick={handleDeleteCurrentNote}
+                      color="primary"
+                    >
+                      <DeleteOutlineIcon sx={{ color: "#51A09B" }} />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </>
             )}
@@ -497,24 +560,25 @@ const ReacodringView = () => {
           </DialogActions>
         </Dialog>
         <Dialog open={isResetDialogOpen} onClose={handleKeepRecording}>
-        <DialogTitle sx={{ fontWeight: 700, mb: "0" }}>
-          Reset the Recording
-        </DialogTitle>
-        <DialogContent mt={0}>
-          <Typography fontWeight={400} fontFamily="Karla" fontSize="18px">
-            Resetting the recording will erase the current audio note and <br />
-            start a new one.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleResetRecording} sx={{ border: "1px solid" }}>
-            Reset
-          </Button>
-          <Button onClick={handleKeepRecording} variant="contained">
-            Keep Recording
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <DialogTitle sx={{ fontWeight: 700, mb: "0" }}>
+            Reset the Recording
+          </DialogTitle>
+          <DialogContent mt={0}>
+            <Typography fontWeight={400} fontFamily="Karla" fontSize="18px">
+              Resetting the recording will erase the current audio note and{" "}
+              <br />
+              start a new one.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleResetRecording} sx={{ border: "1px solid" }}>
+              Reset
+            </Button>
+            <Button onClick={handleKeepRecording} variant="contained">
+              Keep Recording
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );
