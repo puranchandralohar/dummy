@@ -1,22 +1,20 @@
-
-import React, {useState, useEffect } from "react";
-import { useRouter } from 'next/router';
-import SignupPage from "./SignupPage";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
+import HomePage from "@/components/Home/HomePage";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const googleUser = localStorage.getItem('googleUser');
-    const googleToken = localStorage.getItem('googleToken');
-    
+    const googleUser = localStorage.getItem("googleUser");
+    const googleToken = localStorage.getItem("googleToken");
+
     if (googleUser && googleToken) {
-      router.push('/Audio'); 
-    }
-    else{
-      setLoading(false)
+      router.push("/Audio");
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -26,12 +24,9 @@ const Home = () => {
 
   return (
     <div>
-      <SignupPage />
+      <HomePage />
     </div>
   );
 };
 
 export default Home;
-
-
-

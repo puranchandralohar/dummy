@@ -1,12 +1,10 @@
 import React from "react";
-import AudioHeader from "../components/AudioHeader"
 import withAuth from '../components/WithAuth';
-import Audio from '../components/Audio'
+import Audio from '../components/ReacodringView'
 
 const dashboard = () => {
   return (
     <div>
-      <AudioHeader/>
       <Audio/>
     </div>
   );

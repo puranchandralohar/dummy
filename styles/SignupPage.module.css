@@ -18,9 +18,14 @@
   background-color: #fff;
   text-align: center;
   padding: 20px;
+  padding-block: 40px;
   border-radius: 20px;
 }
 
 .dialogTitle {
   font-weight: bold;
 }
+
+
+
+

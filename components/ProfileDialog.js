@@ -235,3 +235,38 @@ const ProfileDialog = ({ open, onClose }) => {
 };
 
 export default ProfileDialog;
+
+
+
+// import React from "react";
+// import { Dialog, DialogActions, DialogTitle, Button } from "@mui/material";
+
+// const ProfileDialog = ({ open, onClose }) => {
+//   const handleLogout = () => {
+//     localStorage.removeItem("googleUser");
+//     localStorage.removeItem("googleToken");
+//     onClose();
+//     window.location.href = "/";
+//   };
+
+//   return (
+//     <Dialog
+//       open={open}
+//       onClose={onClose}
+//       maxWidth="xs"
+//       fullWidth
+//     >
+//       <DialogTitle sx={{textAlign:"center"}}>Manage Your Profile</DialogTitle>
+//       <DialogActions>
+//         <Button onClick={handleLogout} variant="contained" color="primary">
+//           Logout
+//         </Button>
+//         <Button onClick={onClose} variant="outlined" color="secondary">
+//           Close
+//         </Button>
+//       </DialogActions>
+//     </Dialog>
+//   );
+// };
+
+// export default ProfileDialog;

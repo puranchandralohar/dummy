@@ -1,11 +1,9 @@
-
-
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&display=swap');
 
 html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   font-family: 'Fraunces', Arial, sans-serif;
 }
@@ -32,3 +30,5 @@ button {
 .tooltip {
   background-color: gray;
 }
+
+

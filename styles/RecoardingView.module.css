@@ -1,13 +1,13 @@
 
 .container {
-    height: 85vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding-top: 16px; /* Equivalent to py: 4 */
-    padding-bottom: 16px; /* Equivalent to py: 4 */
+    padding-top: 16px; 
+    padding-bottom: 16px; 
     scroll-behavior: smooth;
+    padding-inline:200px;
   }
   
   .box {
@@ -17,18 +17,20 @@
   }
   
   .transcriptBox {
+    margin-top: 100px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
   }
   
-  .notesBox {
+  /* .notesBox {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px; /* Equivalent to gap: 2 */
+    gap: 16px;
     justify-content: center;
-  }
+  } */
   
   .noteBox {
     display: flex;
@@ -37,16 +39,15 @@
     padding: 16px;
     box-sizing: border-box;
     border-radius: 20px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Equivalent to boxShadow: 1 */
-    background-color: #8fb9a8;
-    border: 1px solid #ddd;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    background-color:#B9D9D7;
   }
   
   .micContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 16px; /* Equivalent to mt: 2 */
+    margin-top: 16px;
     color: white;
   }
   
@@ -74,34 +75,40 @@
 .notesBox {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px; /* Space between notes */
+  gap: 16px;
 }
 
 /* Individual note box */
 .noteBox {
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 8px;
   width: calc(33.33% - 16px); /* Adjust width for how many notes per row */
   box-sizing: border-box; /* Include padding and border in the element's total width */
-  max-height: 150px; /* Set a fixed maximum height */
+  max-height: 150px;
   overflow: hidden; /* Hide overflow content */
+  border: none;
 }
 
 /* Note content area */
 .noteContent {
   flex: 1;
-  overflow: hidden; /* Ensure no scrollbars appear */
+  overflow: hidden;
 }
 
 /* Ensure text wraps properly and fits within the note box */
 .noteText {
   margin: 0;
-  white-space: pre-wrap; /* Preserve whitespace and wrap text */
-  overflow: hidden; /* Hide any overflow text */
-  text-overflow: ellipsis; /* Add ellipsis if text overflows */
+  white-space: pre-wrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
+
+.micContainerRecording {
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 20px;
 }
 
 
@@ -117,11 +124,13 @@
   }
 }
 
-.micContainer{
+/* .micContainer{
   position: fixed;
   bottom: 0;
   margin-bottom: 20px;
-}
+} */
+
+
 .outerCircle {
   background-color: hsl(189, 45%, 86%);
   border-radius: 50%;
@@ -138,11 +147,30 @@
   animation: pulse 1s infinite;
 }
 
+.noteBox {
+  display: flex;
+  align-items: center;
+  /* margin: 10px 0; */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  /* padding: 10px; */
+  position: relative;
+}
+
+.noteContent {
+  max-height: 150px; /* Set a fixed height */
+  overflow-y: auto;  /* Enable vertical scrolling */
+  padding-right: 20px; /* To avoid text hiding behind the delete icon */
+}
+
 
 /* Media Queries for Responsiveness */
 
 /* For smaller screens, 768px and below */
 @media (max-width: 768px) {
+  .container {
+    padding-inline:20px;
+  }
   .notesBox {
     grid-template-columns: repeat(2, 1fr); /* 2 columns */
   }
@@ -154,6 +182,9 @@
 
 /* For extra small screens, 480px and below */
 @media (max-width: 480px) {
+  .container {
+    padding-inline:10px;
+  }
   .notesBox {
     grid-template-columns: 1fr; /* 1 column */
   }
@@ -162,3 +193,5 @@
     width: 100%; /* Full width */
   }
 }
+
+

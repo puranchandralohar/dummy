@@ -5,7 +5,7 @@ import { breakpoints } from './constant';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#005555', 
+      main: '#51A09B', 
     },
     secondary: {
       main: '#f50057', 

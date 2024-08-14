@@ -30,8 +30,10 @@ const GoogleLoginComponent = ({ open, onClose }) => {
         }
       );
       // Handle the response from your backend API
-      localStorage.setItem("googleToken", response.data.token);
-      localStorage.setItem("googleUser", JSON.stringify(response.data));
+      console.log(response.data.data)
+      console.log(response.data.data.token,"Hello",response.data.data.user)
+      localStorage.setItem("googleToken", response.data.data.token);
+      localStorage.setItem("googleUser", JSON.stringify(response.data.data));
       router.push("/Audio");
     } catch (error) {
       console.error("Error during API call:", error);
@@ -52,7 +54,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
       PaperProps={{ className: styles.dialogPaper }}
     >
       <DialogTitle className={styles.dialogTitle}>
-        <Typography variant="h6">
+        <Typography variant="h6" color="gray">
           To start recording Login first to continue
         </Typography>
       </DialogTitle>
@@ -62,7 +64,7 @@ const GoogleLoginComponent = ({ open, onClose }) => {
             <Loader />
           </Box>
         )}
-        <Box mt={4}>
+        <Box mt={2} display="flex" justifyContent="center" alignItems="center">
           <GoogleLogin
             onSuccess={onSignIn}
             onError={onGoogleLoginFail}
@@ -90,3 +92,18 @@ const GoogleLoginComponent = ({ open, onClose }) => {
   );
 };
 export default GoogleLoginComponent;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
