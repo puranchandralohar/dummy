@@ -5,9 +5,9 @@ export default function Document() {
     <Html lang="en">
       <Head>
       <title>Oscar</title>
-        <meta name="description" content="Created by Navgurukul" />
+        <meta name="description" content="Created by samyarth" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTviaLmNmv9PtGa7Ffji9Hg3gjPmTYsp7OYnQ&s" />
+        <link rel="icon" href="/images/Oscar Logo png-1.png" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap"
