@@ -13,7 +13,7 @@ import 'regenerator-runtime/runtime';
 function App({ Component, pageProps }) {
   return (
     <>
-      <GoogleOAuthProvider clientId="34917283366-b806koktimo2pod1cjas8kn2lcpn7bse.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId="259781939157-10bnd7fhq3vv45o8nhc0meb3u901g9vr.apps.googleusercontent.com">
         <Provider store={store}>
           {" "}
           <ThemeProvider theme={theme}>
